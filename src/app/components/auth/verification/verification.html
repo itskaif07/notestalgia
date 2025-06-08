@@ -1,0 +1,26 @@
+"
+<div class="w-full h-screen flex flex-col items-center space-y-6 py-44 relative text-center">
+    <h1 class="text-4xl font-bold">Verification Required</h1>
+    <p class="text-xl font-medium">Please check your email for a verification link to continue.</p>
+
+    <p (click)="isEmailReceived = !isEmailReceived" class="text-xl font-medium cursor-pointer">Didn't receive the email?
+        Click here</p>
+
+    @if (isEmailReceived) {
+    <button
+        class="rounded-full w-4/5 lg:w-1/5 h-24 cursor-pointer text-xl font-medium bg-amber-300 text-[#1e1e1e] hover:bg-amber-400 transition duration-300 hover:scale-105">Resend
+        Verification Email</button>
+    }
+
+    @if(successMessage != null) {
+    <p class="text-green-500 text-xl font-medium">{{successMessage}}</p>
+    }
+    @if(errorMessage != null) {
+    <p class="text-red-500 text-xl font-medium">{{errorMessage}}</p>
+    }
+</div>
+
+
+<footer class="text-lg text-center sticky bottom-0 w-full bg-gray-100 py-4">
+    <p>If you did not receive the email, please check your spam folder or try again later.</p>
+</footer>

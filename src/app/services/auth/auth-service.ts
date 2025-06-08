@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, GoogleAuthProvider, sendEmailVerification, signInWithEmailAndPassword, signInWithPopup, updateProfile } from '@angular/fire/auth';
-import { from, Observable, of, switchMap } from 'rxjs';
+import { Auth, authState, createUserWithEmailAndPassword, GoogleAuthProvider, sendEmailVerification, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from '@angular/fire/auth';
+import { BehaviorSubject, from, map, Observable, of, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,14 +9,34 @@ export class AuthService {
 
   auth = inject(Auth);
 
- 
-  signUp(email: string, password: string, name: string): Observable<any> {
+  userSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  user$: Observable<any> = this.userSubject.asObservable();
+
+  constructor(){
+    this.auth.onAuthStateChanged(user =>{
+      if (user) {
+        this.userSubject.next(user);
+      } else {
+        this.userSubject.next(null);
+      }
+    })
+  }
+
+  getCurrentUser(): Observable<any> {
+    return this.user$;
+  }
+
+  isLoggedIn$ = authState(this.auth).pipe(
+    map(user => !!user) // Convert user object to boolean
+  )
+
+  signUp(email: string, password: string, fullName: string): Observable<any> {
     return from(createUserWithEmailAndPassword(this.auth, email, password)).pipe(
       switchMap((credentials => {
         if (credentials) {
           return from(
             sendEmailVerification(credentials.user).then(() => {
-              updateProfile(credentials.user, { displayName: name })
+              updateProfile(credentials.user, { displayName: fullName, photoURL: credentials.user.photoURL })
             })
           )
         }
@@ -31,7 +51,11 @@ export class AuthService {
     return from(signInWithEmailAndPassword(this.auth, email, password))
   }
 
-    googleSignUp(): Observable<any> {
+  logOut(): Observable<void> {
+    return from(signOut(this.auth));
+  }
+
+  googleSignUp(): Observable<any> {
     const provider = new GoogleAuthProvider();
     return from(signInWithPopup(this.auth, provider)).pipe(
       switchMap((credentials) => {
@@ -41,6 +65,5 @@ export class AuthService {
         return of(null)
       })
     )
-
   }
 }

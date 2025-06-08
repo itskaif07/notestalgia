@@ -6,23 +6,45 @@
             class="w-1/2 h-full flex flex-col items-center justify-center  bg-gray-100 p-8 rounded-bl-2xl rounded-tl-2xl px-10 py-8 space-y-14">
             <h1 class="text-4xl font-bold">Welcome Back !</h1>
 
-            <form class="w-4/5 space-y-8">
+            @if(isDisplayingMessage){
+
+            @if(successMessage != '') {
+            <p class="text-green-500 text-lg font-medium">{{successMessage}}</p>
+            }
+            @if(errorMessage != '') {
+            <p class="text-red-500 text-lg font-medium">{{errorMessage}}</p>
+            }
+            }
+
+            <form [formGroup]="loginForm" class="w-4/5 space-y-8" (ngSubmit)="onSubmit()">
                 <div class="space-y-2">
-                    <label for="email" class="block   text-gray-700 font-bold tracking-wide">Email Address</label>
+                    <label for="email" class="block text-gray-700 font-bold tracking-wide">Email Address</label>
                     <div class="flex items-center justify-start space-x-2 border rounded py-1 px-2 ">
                         <img src="assets/email.png" alt="" class="w-6">
-                        <input type="email" id="email" name="email" required
+                        <input type="email" id="email" formControlName="email" required
                             class="block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none  sm:text-sm">
                     </div>
+                    @if(loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+                    <p class="text-red-500 text-sm">Please enter a valid email address.</p>
+                    }
+                    @if(loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched) {
+                    <p class="text-red-500 text-sm">Email is required.</p>
+                    }
                 </div>
 
                 <div class="space-y-2">
-                    <label for="password" class="block   text-gray-700 font-bold tracking-wide">Password</label>
+                    <label for="password" class="block text-gray-700 font-bold tracking-wide">Password</label>
                     <div class="flex items-center justify-start space-x-2 border rounded py-1 px-2 ">
                         <img src="assets/lock.png" alt="" class="w-6">
-                        <input type="password" id="password" name="password" required
+                        <input type="password" id="password" formControlName="password" required
                             class="block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none  sm:text-sm">
                     </div>
+                    @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+                    <p class="text-red-500 text-sm">Please enter a valid password.</p>
+                    }
+                    @if(loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
+                    <p class="text-red-500 text-sm">Password is required.</p>
+                    }
                 </div>
 
                 <button type="submit"
@@ -31,17 +53,22 @@
             </form>
 
             <div class="w-4/5 text-center space-y-3">
-                <p class="text-gray-600 font-semibold cursor-pointer tracking-wide text-lg hover:scale-105 inline-block">Forgot Password ?</p>
+                <p
+                    class="text-gray-600 font-semibold cursor-pointer tracking-wide text-lg hover:scale-105 inline-block">
+                    Forgot Password ?</p>
                 <div class="flex items-center justify-center space-x-2">
                     <p class="text-gray-600 font-semibold tracking-wide text-lg">Don't have an account ? </p>
-                    <p routerLink="/signup" class="text-[#181818] font-bold  cursor-pointer underline hover:scale-105 transition-all duration-200  ease-in">Sign Up</p>
+                    <p routerLink="/signup"
+                        class="text-[#181818] font-bold  cursor-pointer underline hover:scale-105 transition-all duration-200  ease-in">
+                        Sign Up</p>
                 </div>
 
             </div>
 
             <div class="w-11/12 h-0.5 bg-gray-500"></div>
 
-            <div class="w-1/3 py-3 flex items-center justify-center space-x-10 border rounded-full cursor-pointer hover:scale-105 transition-all duration-100 ease-in hover:bg-gray-200">
+            <div (click)="googleLogin()"
+                class="w-1/3 py-3 flex items-center justify-center space-x-10 border rounded-full cursor-pointer hover:scale-105 transition-all duration-100 ease-in hover:bg-gray-200">
                 <img src="assets/google.png" alt="google" class="w-10">
                 <h1 class="font-semibold text-lg tracking-wide">Google</h1>
             </div>

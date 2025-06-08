@@ -3,6 +3,7 @@ import { Home } from './components/home/home';
 import { About } from './components/about/about';
 import { Login } from './components/auth/login/login';
 import { Signup } from './components/auth/signup/signup';
+import { Verification } from './components/auth/verification/verification';
 
 export const routes: Routes = [
 
@@ -15,6 +16,9 @@ export const routes: Routes = [
         path: 'about',
         component: About
     },
+
+    // Authentication routes
+
     {
         path: 'login',
         component: Login
@@ -22,6 +26,10 @@ export const routes: Routes = [
     {
         path: 'signup',
         component: Signup
+    },
+    {
+        path: 'verification',
+        component: Verification
     }
 
 
