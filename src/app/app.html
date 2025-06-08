@@ -14,6 +14,7 @@
       <a routerLink="/about"
         class="font-semibold hover:text-2xl text-xl text-white hover:underline transition-all ease-in duration-200 hover:text-amber-300">About</a>
 
+      
       @if(authService.isLoggedIn$ | async){
         <div class="flex items-center space-x-4">
           <h1 class="text-white font-medium text-xl">Hi, {{fullName}}</h1>

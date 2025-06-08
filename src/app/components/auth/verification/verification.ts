@@ -71,8 +71,6 @@ export class Verification implements OnInit {
       console.error('Error during verification login:', error);
       this.errorMessage = 'Something went wrong. Please try again.';
     }
-
-
   }
 
 }

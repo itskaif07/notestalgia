@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, authState, createUserWithEmailAndPassword, GoogleAuthProvider, sendEmailVerification, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from '@angular/fire/auth';
+import { Auth, authState, createUserWithEmailAndPassword, GoogleAuthProvider, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from '@angular/fire/auth';
 import { BehaviorSubject, from, map, Observable, of, switchMap } from 'rxjs';
 
 @Injectable({
@@ -30,6 +30,8 @@ export class AuthService {
     map(user => !!user) // Convert user object to boolean
   )
 
+
+
   signUp(email: string, password: string, fullName: string): Observable<any> {
     return from(createUserWithEmailAndPassword(this.auth, email, password)).pipe(
       switchMap((credentials => {
@@ -45,6 +47,9 @@ export class AuthService {
     )
   }
 
+  resetPassword(email:string){
+    return sendPasswordResetEmail(this.auth, email)
+  }
 
 
   logIn(email: string, password: string): Observable<any> {
