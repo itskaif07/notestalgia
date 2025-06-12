@@ -3,7 +3,8 @@ import { Home } from './components/home/home';
 import { About } from './components/about/about';
 import { Login } from './components/auth/login/login';
 import { Signup } from './components/auth/signup/signup';
-import { Verification } from './components/auth/verification/verification';
+import { PasswordReset } from './components/auth/password-reset/password-reset';
+import { AuthCallBack } from './components/auth/auth-call-back/auth-call-back';
 
 export const routes: Routes = [
 
@@ -28,8 +29,12 @@ export const routes: Routes = [
         component: Signup
     },
     {
-        path: 'verification',
-        component: Verification
+        path: 'auth-callback',
+        component: AuthCallBack
+    },
+    {
+        path: 'password-reset',
+        component: PasswordReset
     }
 
 

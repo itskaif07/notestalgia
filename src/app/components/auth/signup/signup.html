@@ -1,10 +1,10 @@
-<div class="w-full h-[90vh] flex items-center justify-center px-10 py-4 bg-[#1e1e1e]">
+<div class="w-full h-full xl:h-[90vh] flex items-center justify-center px-2 sm:px-10 xl:py-0 bg-[#1e1e1e]">
 
-    <!-- Left side form -->
-    <div class="w-11/12 h-full flex items-center justify-center">
+    <div class="w-full sm:w-11/12 h-full flex items-center justify-center">
+        <!-- Left side form -->
         <div
-            class="w-1/2 h-full flex flex-col items-center justify-center  bg-gray-100 rounded-bl-2xl rounded-tl-2xl px-10 py-4 space-y-10">
-            <h1 class="text-4xl font-bold">Create Your Account</h1>
+            class="w-full sm:w-11/12 xl:w-1/2 h-full flex flex-col items-center justify-center  bg-gray-100 rounded-2xl max-sm:rounded-none xl:rounded-br-none xl:rounded-tr-none px-10 py-12 space-y-2">
+            <h1 class="text-3xl font-bold text-center">Create Your Account</h1>
 
             @if (errorMessage && errorMessage != '') {
             <p class="text-red-500">{{ errorMessage }}</p>
@@ -13,98 +13,102 @@
             @if (successMessage && successMessage != '') {
             <p class="text-green-500">{{ successMessage }}</p>
             }
+            <div class="w-full sm:w-4/5 h-full flex flex-col items-center justify-center space-y-10">
 
-            <form [formGroup]="signUpForm" class="w-4/5 space-y-4" (ngSubmit)="onSubmit()">
+                <form [formGroup]="signUpForm" class="w-full space-y-4" (ngSubmit)="onSubmit()">
 
-                <div class="space-y-2 w-full">
-                    <label for="name" class="block   text-gray-700 font-bold tracking-wide">Full Name</label>
-                    <div class="flex items-center justify-start space-x-2 border rounded py-1 px-2 ">
-                        <img src="assets/user.png" alt="" class="w-6">
-                        <input type="text" id="name" formControlName="fullName"
-                            class="block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none  sm:text-sm">
-                    </div>
-                    @if (signUpForm.get('fullName')?.hasError('required') && signUpForm.get('fullName')?.touched) {
-                    <p class="text-red-500 text-sm">Full Name is required.</p>
-                    }
-                </div>
-
-
-                <div class="space-y-2">
-                    <label for="email" class="block   text-gray-700 font-bold tracking-wide">Email Address</label>
-                    <div class="flex items-center justify-start space-x-2 border rounded py-1 px-2 ">
-                        <img src="assets/email.png" alt="" class="w-6">
-                        <input type="email" id="email" required formControlName="email"
-                            class="block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none  sm:text-sm">
+                    <div class="space-y-2 w-full">
+                        <label for="name" class="block text-sm text-gray-700 font-bold tracking-wide">Full Name</label>
+                        <div class="flex items-center justify-start space-x-2 border rounded py-1 px-2 ">
+                            <img src="assets/user.png" alt="" class="w-6">
+                            <input type="text" id="name" formControlName="fullName"
+                                class="block w-full px-3 py-1 rounded-md shadow-sm focus:outline-none sm:text-sm">
+                        </div>
+                        @if (signUpForm.get('fullName')?.hasError('required') && signUpForm.get('fullName')?.touched) {
+                        <p class="text-red-500 text-sm">Full Name is required.</p>
+                        }
                     </div>
 
-                    @if (signUpForm.get('email')?.hasError('required') && signUpForm.get('email')?.touched) {
-                    <p class="text-red-500 text-sm">Email is required.</p>
-                    }
-                    @if (signUpForm.get('email')?.invalid && signUpForm.get('email')?.touched) {
-                    <p class="text-red-500 text-sm">Please enter a valid email address.</p>
-                    }
-                </div>
 
-                <div class="space-y-2">
-                    <label for="password" class="block   text-gray-700 font-bold tracking-wide">Password</label>
-                    <div class="flex items-center justify-start space-x-2 border rounded py-1 px-2 ">
-                        <img src="assets/lock.png" alt="" class="w-6">
-                        <input type="password" id="password" required formControlName="password"
-                            class="block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none  sm:text-sm">
+                    <div class="space-y-2">
+                        <label for="email" class="block   text-gray-700 font-bold tracking-wide text-sm">Email Address</label>
+                        <div class="flex items-center justify-start space-x-2 border rounded py-1 px-2 ">
+                            <img src="assets/email.png" alt="" class="w-6">
+                            <input type="email" id="email" required formControlName="email"
+                                class="block w-full px-3 py-1 rounded-md shadow-sm focus:outline-none  sm:text-sm">
+                        </div>
+
+                        @if (signUpForm.get('email')?.hasError('required') && signUpForm.get('email')?.touched) {
+                        <p class="text-red-500 text-sm">Email is required.</p>
+                        }
+                        @if (signUpForm.get('email')?.invalid && signUpForm.get('email')?.touched) {
+                        <p class="text-red-500 text-sm">Please enter a valid email address.</p>
+                        }
                     </div>
 
-                    @if (signUpForm.get('password')?.hasError('required') && signUpForm.get('password')?.touched) {
-                    <p class="text-red-500 text-sm">Password is required.</p>
-                    }
-                    @if (signUpForm.get('password')?.invalid && signUpForm.get('password')?.touched) {
-                    <p class="text-red-500 text-sm">Please enter a valid password.</p>
-                    }
-                </div>
+                    <div class="space-y-2">
+                        <label for="password" class="block   text-gray-700 font-bold tracking-wide text-sm">Password</label>
+                        <div class="flex items-center justify-start space-x-2 border rounded py-1 px-2 ">
+                            <img src="assets/lock.png" alt="" class="w-6">
+                            <input type="password" id="password" required formControlName="password"
+                                class="block w-full px-3 py-1 rounded-md shadow-sm focus:outline-none  sm:text-sm">
+                        </div>
 
-                <div class="space-y-2">
-                    <label for="confirmPassword" class="block   text-gray-700 font-bold tracking-wide">Confirm
-                        Password</label>
-                    <div class="flex items-center justify-start space-x-2 border rounded py-1 px-2 ">
-                        <img src="assets/lock.png" alt="" class="w-6">
-                        <input type="password" id="confirmPassword" required formControlName="confirmPassword"
-                            class="block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none  sm:text-sm">
+                        @if (signUpForm.get('password')?.hasError('required') && signUpForm.get('password')?.touched) {
+                        <p class="text-red-500 text-sm">Password is required.</p>
+                        }
+                        @if (signUpForm.get('password')?.invalid && signUpForm.get('password')?.touched) {
+                        <p class="text-red-500 text-sm">Please enter a valid password.</p>
+                        }
                     </div>
-                    @if (signUpForm.get('confirmPassword')?.hasError('required') &&
-                    signUpForm.get('confirmPassword')?.touched) {
-                    <p class="text-red-500 text-sm">Confirm Password is required.</p>
-                    }
-                    @if (signUpForm.get('confirmPassword')?.invalid && signUpForm.get('confirmPassword')?.touched) {
-                    <p class="text-red-500 text-sm">Please enter a valid confirm password.</p>
-                    }
+
+                    <div class="space-y-2">
+                        <label for="confirmPassword" class="block   text-gray-700 font-bold tracking-wide text-sm">Confirm
+                            Password</label>
+                        <div class="flex items-center justify-start space-x-2 border rounded py-1 px-2 ">
+                            <img src="assets/lock.png" alt="" class="w-6">
+                            <input type="password" id="confirmPassword" required formControlName="confirmPassword"
+                                class="block w-full px-3 py-1 rounded-md shadow-sm focus:outline-none  sm:text-sm">
+                        </div>
+                        @if (signUpForm.get('confirmPassword')?.hasError('required') &&
+                        signUpForm.get('confirmPassword')?.touched) {
+                        <p class="text-red-500 text-sm">Confirm Password is required.</p>
+                        }
+                        @if (signUpForm.get('confirmPassword')?.invalid && signUpForm.get('confirmPassword')?.touched) {
+                        <p class="text-red-500 text-sm">Please enter a valid confirm password.</p>
+                        }
+                    </div>
+
+                    <button type="submit"
+                        class="mt-6 w-full bg-amber-400 cursor-pointer text-[#1e1e1e] font-semibold text-lg py-3 px-4 rounded-md hover:scale-105 transition duration-200">Sign
+                        Up</button>
+                </form>
+
+                <div class="w-full text-left space-y-4">
+                    <div class="flex items-center justify-center space-x-2">
+                        <p class="text-gray-600 font-semibold tracking-wide">Already have an account ? </p>
+                        <p routerLink="/login"
+                            class="text-[#181818] font-bold  cursor-pointer underline hover:scale-105 transition-all duration-200  ease-in">
+                            Log In</p>
+                    </div>
+                    <div class="w-full h-0.5 bg-gray-500"></div>
                 </div>
 
-                <button type="submit"
-                    class="mt-6 w-full bg-amber-400 cursor-pointer text-[#1e1e1e] font-semibold text-lg py-4 px-4 rounded-md hover:scale-105 transition duration-200">Sign
-                    Up</button>
-            </form>
 
-            <div class="w-4/5 text-left space-y-1">
-                <div class="flex items-center justify-center space-x-2">
-                    <p class="text-gray-600 font-semibold tracking-wide text-lg">Already have an account ? </p>
-                    <p routerLink="/login"
-                        class="text-[#181818] font-bold  cursor-pointer underline hover:scale-105 transition-all duration-200  ease-in">
-                        Log In</p>
+                <div (click)="googleSignUp()"
+                    class="w-full py-2 flex items-center justify-center space-x-10 border rounded-full cursor-pointer hover:scale-105 transition-all duration-100 ease-in hover:bg-gray-200">
+                    <img src="assets/google.png" alt="google" class="w-10">
+                    <h1 class="font-semibold text-lg tracking-wide">Google</h1>
                 </div>
+
             </div>
 
-            <div class="w-11/12 h-0.5 bg-gray-500"></div>
-
-            <div (click)="googleSignUp()"
-                class="w-1/3 py-3 flex items-center justify-center space-x-10 border rounded-full cursor-pointer hover:scale-105 transition-all duration-100 ease-in hover:bg-gray-200">
-                <img src="assets/google.png" alt="google" class="w-10">
-                <h1 class="font-semibold text-lg tracking-wide">Google</h1>
-            </div>
 
         </div>
 
         <!-- Right side image -->
 
-        <div class="w-1/2 h-full flex items-center justify-center rounded-tr-2xl rounded-br-2xl">
+        <div class="hidden w-1/2 h-full xl:flex items-center justify-center rounded-tr-2xl rounded-br-2xl">
             <img src="assets/signup.jpg" alt="Signup"
                 class="w-full h-full object-cover object-center rounded-tr-2xl rounded-br-2xl">
         </div>

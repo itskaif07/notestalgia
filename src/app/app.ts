@@ -1,12 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth/auth-service';
-import { AsyncPipe } from '@angular/common';
-import { firstValueFrom } from 'rxjs';
+import { Auth, onAuthStateChanged } from '@angular/fire/auth';
+import { gsap } from 'gsap';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, AsyncPipe],
+  imports: [RouterOutlet, RouterLink],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -14,18 +14,37 @@ export class App implements OnInit {
   protected title = 'notestalgia';
 
   authService = inject(AuthService);
+  auth = inject(Auth)
+  router = inject(Router)
+
   isVerified: boolean = false
   isAuthenticated: boolean = false
 
   fullName: string = '';
+  data: any = null
 
   ngOnInit() {
     this.getUserDetails();
+    this.checkLoginAndVerification()
   }
+
+  checkLoginAndVerification() {
+  this.authService.getCurrentUser().subscribe(user => {
+    if (user) {
+      if (!user.emailVerified && !user.isAnonymous) {
+        this.router.navigate(['/auth-callback']);
+      } else {
+        console.log('User is verified or anonymous');
+      }
+    }
+  });
+}
+
 
   getUserDetails() {
     return this.authService.getCurrentUser().subscribe(user => {
       if (user) {
+        this.data = user
         this.fullName = user.displayName || '';
       }
     }, error => {
@@ -33,6 +52,38 @@ export class App implements OnInit {
     })
   }
 
+ openMenu() {
+  gsap.to("#menubar", {
+    x: 0,          // Move into view
+    opacity: 1,
+    ease: "expo.out",
+    duration: 1
+  });
+}
+
+closeMenu() {
+  gsap.to("#menubar", {
+    x: "100%",    // Move out of view (upward)
+    opacity: 0,
+    ease: "expo.in",
+    duration: 0.5
+  });
+}
+
+navigateToAbout(){
+  this.router.navigate(['/about'])
+  this.closeMenu()
+}
+
+navigateToLogin(){
+  this.router.navigate(['/login'])
+  this.closeMenu()
+}
+
+navigateToSignUp(){
+  this.router.navigate(['/signup'])
+  this.closeMenu()
+}
 
 
 }

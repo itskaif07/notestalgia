@@ -1,42 +1,65 @@
-<main class="w-full h-full">
+<main class="w-full h-full relative">
 
-  <nav class="text-center text-[#111] flex items-center justify-between px-6 bg-[#1e1e1e]">
+  <nav class="text-center text-[#111] flex items-center justify-between px-2 lg:px-10 bg-[#1e1e1e]">
     <div class="flex items-center space-x-4 py-3">
-      <img src="assets/logo.png" alt="Logo" class="w-12 sm:w-16">
-      <a href="/" class="flex flex-col items-start text-3xl sm:text-3xl">
+      <img src="assets/logo.png" alt="Logo" class="w-10 sm:w-12">
+      <a href="/" class="flex flex-col items-start text-2xl sm:text-2xl">
         <h1 class="font-bold text-white">NOTES</h1>
         <h1 class="font-medium text-white">talgia</h1>
       </a>
     </div>
     <div class="flex items-center space-x-10 sm:space-x-20 max-[500px]:hidden">
       <a routerLink="/"
-        class="font-semibold hover:text-2xl text-xl text-white hover:underline transition-all ease-in duration-200 hover:text-amber-300">Home</a>
+        class="font-semibold hover:text-2xl text-lg text-white hover:underline transition-all ease-in duration-200 hover:text-amber-300">Home</a>
       <a routerLink="/about"
-        class="font-semibold hover:text-2xl text-xl text-white hover:underline transition-all ease-in duration-200 hover:text-amber-300">About</a>
+        class="font-semibold hover:text-2xl text-lg text-white hover:underline transition-all ease-in duration-200 hover:text-amber-300">About</a>
 
-      
-      @if(authService.isLoggedIn$ | async){
-        <div class="flex items-center space-x-4">
-          <h1 class="text-white font-medium text-xl">Hi, {{fullName}}</h1>
-          <h1 class="text-white font-medium text-2xl">|</h1>
-          <button (click)="authService.logOut()"
-            class="bg-[#1e1e1e] border text-white border-amber-300 font-medium cursor-pointer px-6 h-12 text-xl rounded hover:bg-red-400 hover:border-red-400 transition duration-300 hover:scale-105">
-            Log out
-          </button>
-        </div>
+
+      @if(data != null){
+      @if(data?.emailVerified && !data?.isAnonymous){
+      <div class="flex items-center space-x-4">
+        <h1 class="text-white font-medium text-lg">Hi, {{fullName}}</h1>
+        <h1 class="text-white font-medium text-2xl">|</h1>
+        <button (click)="authService.logOut()"
+          class="bg-[#1e1e1e] border text-white border-amber-300 font-medium cursor-pointer px-6 h-12 text-lg rounded hover:bg-red-400 hover:border-red-400 transition duration-300 hover:scale-105">
+          Log out
+        </button>
+      </div>
       }
       @else {
       <button routerLink="/login"
-        class="bg-amber-300 text-black font-medium cursor-pointer px-10 h-12 text-xl rounded hover:bg-amber-400 transition duration-300 hover:scale-105">
+        class="bg-amber-300 text-black font-medium cursor-pointer px-10 h-12 text-lg rounded hover:bg-amber-400 transition duration-300 hover:scale-105">
         Login
       </button>
       }
+      }
     </div>
 
+
     <div class="min-[501px]:hidden">
-      <img src="assets/menu.png" alt="menu.png" class="w-10 sm:w-10  invert grayscale">
+      <img (click)="openMenu()" src="assets/menu.png" alt="menu.png" class="w-10 sm:w-10  invert grayscale">
     </div>
   </nav>
+
+  <div id="menubar"
+    class="w-full h-fit py-10 flex flex-col items-center pt-8 z-50 bg-[#1e1e1e] text-white fixed inset-0 space-y-6 text-lg font-medium"
+    style="transform: translateX(100%); opacity: 0;">
+
+    <div class="w-full flex items-center justify-between px-4">
+      @if(data?.emailVerified && !data?.isAnonymous){
+      <h1 (click)="closeMenu()" class="text-white font-medium">{{fullName}}</h1>
+      }
+      @else {
+      <div></div>
+      }
+      <img (click)="closeMenu()" src="assets/close.png" alt="" class="w-8 invert grayscale">
+    </div>
+    <div class="flex flex-col items-center justify-center space-y-8">
+      <h1 (click)="navigateToAbout()">About</h1>
+      <h1 (click)="navigateToLogin()">Log In</h1>
+      <h1 (click)="navigateToSignUp()">Sign Up</h1>
+    </div>
+  </div>
 </main>
 
 <router-outlet></router-outlet>

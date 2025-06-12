@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, authState, createUserWithEmailAndPassword, GoogleAuthProvider, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from '@angular/fire/auth';
+import { Auth, authState, createUserWithEmailAndPassword, GoogleAuthProvider, sendEmailVerification, sendPasswordResetEmail, signInAnonymously, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from '@angular/fire/auth';
 import { BehaviorSubject, from, map, Observable, of, switchMap } from 'rxjs';
 
 @Injectable({
@@ -12,8 +12,8 @@ export class AuthService {
   userSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   user$: Observable<any> = this.userSubject.asObservable();
 
-  constructor(){
-    this.auth.onAuthStateChanged(user =>{
+  constructor() {
+    this.auth.onAuthStateChanged(user => {
       if (user) {
         this.userSubject.next(user);
       } else {
@@ -30,14 +30,24 @@ export class AuthService {
     map(user => !!user) // Convert user object to boolean
   )
 
+  logInAsGuest(){
+    return from(signInAnonymously(this.auth))
+  }
+
 
 
   signUp(email: string, password: string, fullName: string): Observable<any> {
+
+    const actionCodeSettings = {
+      url: 'http://localhost:4200/',
+      handleCodeInApp: true
+    }
+
     return from(createUserWithEmailAndPassword(this.auth, email, password)).pipe(
       switchMap((credentials => {
         if (credentials) {
           return from(
-            sendEmailVerification(credentials.user).then(() => {
+            sendEmailVerification(credentials.user, actionCodeSettings).then(() => {
               updateProfile(credentials.user, { displayName: fullName, photoURL: credentials.user.photoURL })
             })
           )
@@ -47,9 +57,6 @@ export class AuthService {
     )
   }
 
-  resetPassword(email:string){
-    return sendPasswordResetEmail(this.auth, email)
-  }
 
 
   logIn(email: string, password: string): Observable<any> {

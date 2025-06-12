@@ -2,7 +2,6 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth/auth-service';
-import { first } from 'rxjs';
 
 @Component({
   selector: 'app-signup',
@@ -51,7 +50,7 @@ export class Signup implements OnInit {
         this.successMessage = 'Registration successful!';
         this.errorMessage = '';
         this.signUpForm.reset();
-        this.router.navigate(['/verification']);
+        this.router.navigate(['/auth-callback']);
       }, error =>{
         if(error.code === 'auth/email-already-in-use') {
           this.errorMessage = 'Email already in use. Please use a different email.';
