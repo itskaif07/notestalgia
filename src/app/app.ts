@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth/auth-service';
-import { Auth, onAuthStateChanged } from '@angular/fire/auth';
+import { Auth, browserLocalPersistence, onAuthStateChanged, setPersistence, signInAnonymously } from '@angular/fire/auth';
 import { gsap } from 'gsap';
 
 @Component({
@@ -26,19 +26,40 @@ export class App implements OnInit {
   ngOnInit() {
     this.getUserDetails();
     this.checkLoginAndVerification()
+
+    // if (document.visibilityState == 'visible') {
+    //   this.anonymousLogin()
+    // }
+    // else {
+    //   document.addEventListener('visibilitychange', () => {
+    //     if (document.visibilityState == 'visible') {
+    //       this.anonymousLogin()
+    //     }
+    //   })
+    // }
+
+  }
+
+  anonymousLogin() {
+    setPersistence(this.auth, browserLocalPersistence)
+      .then(() => {
+        return signInAnonymously(this.auth)
+      }, error => {
+        console.log('Error returned with', error)
+      })
   }
 
   checkLoginAndVerification() {
-  this.authService.getCurrentUser().subscribe(user => {
-    if (user) {
-      if (!user.emailVerified && !user.isAnonymous) {
-        this.router.navigate(['/auth-callback']);
-      } else {
-        console.log('User is verified or anonymous');
+    this.authService.getCurrentUser().subscribe(user => {
+      if (user) {
+        if (!user.emailVerified && !user.isAnonymous) {
+          this.router.navigate(['/auth-callback']);
+        } else {
+          console.log('User is verified or anonymous');
+        }
       }
-    }
-  });
-}
+    });
+  }
 
 
   getUserDetails() {
@@ -52,38 +73,38 @@ export class App implements OnInit {
     })
   }
 
- openMenu() {
-  gsap.to("#menubar", {
-    x: 0,          // Move into view
-    opacity: 1,
-    ease: "expo.out",
-    duration: 1
-  });
-}
+  openMenu() {
+    gsap.to("#menubar", {
+      x: 0,
+      opacity: 1,
+      ease: "expo.in",
+      duration: 0.2
+    });
+  }
 
-closeMenu() {
-  gsap.to("#menubar", {
-    x: "100%",    // Move out of view (upward)
-    opacity: 0,
-    ease: "expo.in",
-    duration: 0.5
-  });
-}
+  closeMenu() {
+    gsap.to("#menubar", {
+      x: "100%",    
+      opacity: 0,
+      ease: "expo.in",
+      duration: 0.5
+    });
+  }
 
-navigateToAbout(){
-  this.router.navigate(['/about'])
-  this.closeMenu()
-}
+  navigateToAbout() {
+    this.router.navigate(['/about'])
+    this.closeMenu()
+  }
 
-navigateToLogin(){
-  this.router.navigate(['/login'])
-  this.closeMenu()
-}
+  navigateToLogin() {
+    this.router.navigate(['/login'])
+    this.closeMenu()
+  }
 
-navigateToSignUp(){
-  this.router.navigate(['/signup'])
-  this.closeMenu()
-}
+  navigateToSignUp() {
+    this.router.navigate(['/signup'])
+    this.closeMenu()
+  }
 
 
 }

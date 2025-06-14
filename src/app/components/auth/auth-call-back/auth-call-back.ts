@@ -63,6 +63,9 @@ export class AuthCallBack implements OnInit {
             this.successMessage = 'Verification email sent again!'
           })
           .catch((error) => {
+            if(error.code == 'auth/too-many-requests'){
+              this.errorMessage = "Too many requests detected. Please wait a moment before retrying."
+            }
             this.errorMessage = 'Failed to resend verification email.';
             console.error(error);
           });

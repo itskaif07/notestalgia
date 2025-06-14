@@ -7,7 +7,7 @@
         Click here</p>
 
     @if (isEmailReceived) {
-    <button
+    <button (click)="resendEmail()"
         class="rounded-full w-4/5 lg:w-1/5 h-24 cursor-pointer text-xl font-medium bg-amber-300 text-[#1e1e1e] hover:bg-amber-400 transition duration-300 hover:scale-105">Resend
         Verification Email</button>
     }

@@ -1,31 +1,45 @@
-<!-- ✅ Make outermost div relative -->
-<div class="relative py-32 h-full lg:h-[90vh] bg-cover bg-[url('/assets/hero.jpg')] w-full flex flex-col lg:flex-row justify-center lg:justify-between  lg:bg-gradient-to-b from-[#1e1e1e] via-[#3b2f27] to-[#4a3a28] lg:bg-[length:400%_400%] animate-gradient text-white lg:px-10 space-y-14 lg:space-y-0 ">
+<!-- outermost div  -->
+<div
+  class="relative py-32 h-full lg:h-screen bg-cover bg-[url('/assets/hero.jpg')] w-full flex flex-col lg:flex-row justify-center lg:justify-between  lg:bg-gradient-to-b from-[#1e1e1e] via-[#3b2f27] to-[#4a3a28] lg:bg-[length:400%_400%] animate-gradient text-white lg:px-10 space-y-14 lg:space-y-0 ">
 
-  <!-- ✅ Overlay that only shows on mobile -->
+  <!--  Overlay that only shows on mobile -->
   <div class="lg:hidden absolute inset-0 bg-black/60 z-0"></div>
+  <!-- Add inside the left hero section -->
+  <div class="absolute -top-10 -left-10 w-96 h-96 rounded-full bg-amber-500/10 blur-2xl z-0 bg-glow"></div>
 
-  <!-- ✅ Hero content with z-index to stay above overlay -->
+
+  <!-- Hero content with z-index to stay above overlay -->
   <div id="left" class="relative z-10 flex flex-col items-center lg:items-start text-center space-y-8 xl:w-1/2 w-full">
-    <div class="flex flex-col items-center lg:items-start space-y-2  text-center lg:text-left text-4xl">
+    <div class="flex flex-col items-center lg:items-start space-y-2  text-center lg:text-left text-4xl z-10">
       <h1 class=" font-bold">Handwritten Notes</h1>
       <h1 class="text-amber-300 font-bold">With Nostalgic Touch</h1>
     </div>
+    <div class="absolute -top-10 -left-10 w-96 h-96 rounded-full bg-amber-500/10 blur-2xl z-0 bg-glow"></div>
 
-    <p class="text-xl dancing-font tracking-wide text-center lg:text-left">Relive the charm of handwritten notes — upload, explore, own.</p>
+    <p class="text-xl dancing-font tracking-wide text-center lg:text-left z-10">Relive the charm of handwritten notes —
+      upload, explore, own.</p>
 
-    <div class="flex items-start lg:items-center justify-center lg:justify-start space-x-10 mt-12 max-sm:flex-col max-sm:space-x-0 max-sm:space-y-4 w-4/5 lg:w-full">
+    <div
+      class="flex items-start lg:items-center justify-center lg:justify-start space-x-10 mt-12 max-sm:flex-col max-sm:space-x-0 max-sm:space-y-4 w-4/5 lg:w-full">
       <button
-        class="bg-[#1e1e1e] border border-amber-300 text-white  font-medium cursor-pointer w-full lg:w-44 h-16 text-lg rounded hover:bg-amber-300 transition duration-300 hover:scale-105 hover:text-black">
+        class="bg-[#1e1e1e] border border-amber-300 text-white font-medium cursor-pointer w-full lg:w-44 h-16 text-lg rounded z-10 
+         hover:bg-amber-300 hover:text-black transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg">
         Browse Notes
       </button>
+
       <button
-        class="bg-[#1e1e1e] border border-green-600 text-white hover:text-black  font-medium cursor-pointer w-full lg:w-44 h-16 text-lg rounded hover:bg-green-600 transition duration-300 hover:scale-105 ">
+        class="bg-[#1e1e1e] border border-green-600 text-white font-medium cursor-pointer w-full lg:w-44 h-16 text-lg rounded z-10 
+         hover:bg-green-600 hover:text-black transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg">
         Upload & Earn
       </button>
+
     </div>
   </div>
 
-  <div id="right" class="xl:w-2/5 w-full h-full hidden lg:flex items-center justify-center lg:justify-end z-10 relative">
-    <img src="assets/hero.jpg" alt="" class="w-full min-[2000px]:w-9/12 h-full object-center object-cover">
+  <div id="right"
+    class="xl:w-2/5 w-full h-full hidden lg:flex items-center justify-center lg:justify-end z-10 relative rounded-xl">
+    <img src="assets/hero.jpg" alt="" class="w-full min-[2000px]:w-9/12 h-full object-center object-cover rounded-xl hover:shadow-amber-500/30
+ transform -rotate-2 shadow-2xl shadow-black/60 transition-transform duration-300 hover:rotate-0
+">
   </div>
 </div>

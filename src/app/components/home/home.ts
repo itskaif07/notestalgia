@@ -19,8 +19,7 @@ export class Home implements OnInit {
       if (!user) {
         this.authService.logInAsGuest().subscribe({
           next: (res) => {
-            console.warn(res.user)
-            console.info('Hello')
+            console.log(res.user)
           },
           error: (error) => console.error(error)
         })
@@ -35,23 +34,36 @@ export class Home implements OnInit {
   heroAnimation() {
     document.body.style.overflow = 'hidden';
 
-    gsap.from('#left', {
-      x: '-100%',
-      opacity: 1,
-      ease: 'power1.inOut',
-      duration: 1,
-      display: 'none',
-      onComplete: () => {
-        document.body.style.overflow = '';
-      }
-    })
-    gsap.from('#right', {
-      x: '100%',
-      opacity: 1,
-      ease: 'power1.inOut',
-      duration: 1,
-      display: 'none'
-    })
+  gsap.from('#left > *', {
+  opacity: 0,
+  y: 20,
+  duration: 0.6,
+  ease: 'power2.out',
+  stagger: 0.2,
+  delay: 0.5
+})
+
+gsap.from('.bg-glow', {
+  opacity: 0,
+  scale: 0.9,
+  duration: 1.5,
+  ease: 'power2.out',
+  delay: 0.1
+})
+
+
+
+gsap.from('#right', {
+  x: '200',
+  opacity: 0,
+  ease: 'power2.out',
+  duration: 1,
+  delay: 0.5 // comes in a bit later
+})
+
+
+
+
   }
 
 }

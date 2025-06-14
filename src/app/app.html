@@ -1,6 +1,6 @@
 <main class="w-full h-full relative">
 
-  <nav class="text-center text-[#111] flex items-center justify-between px-2 lg:px-10 bg-[#1e1e1e]">
+  <nav class="text-center text-[#111] flex items-center justify-between px-2 lg:px-10 bg-[#1e1e1e]  border-b border-amber-400/40">
     <div class="flex items-center space-x-4 py-3">
       <img src="assets/logo.png" alt="Logo" class="w-10 sm:w-12">
       <a href="/" class="flex flex-col items-start text-2xl sm:text-2xl">
@@ -41,25 +41,35 @@
     </div>
   </nav>
 
-  <div id="menubar"
-    class="w-full h-fit py-10 flex flex-col items-center pt-8 z-50 bg-[#1e1e1e] text-white fixed inset-0 space-y-6 text-lg font-medium"
-    style="transform: translateX(100%); opacity: 0;">
+<div id="menubar"
+  class="w-full min-h-screen py-10 flex flex-col items-center pt-8 z-[999] fixed inset-0 backdrop-blur-sm bg-[#1e1e1e]/90 text-white space-y-6 text-lg font-medium transition-all duration-500"
+  style="transform: translateX(100%); opacity: 0;">
 
-    <div class="w-full flex items-center justify-between px-4">
-      @if(data?.emailVerified && !data?.isAnonymous){
-      <h1 (click)="closeMenu()" class="text-white font-medium">{{fullName}}</h1>
-      }
-      @else {
-      <div></div>
-      }
-      <img (click)="closeMenu()" src="assets/close.png" alt="" class="w-8 invert grayscale">
-    </div>
-    <div class="flex flex-col items-center justify-center space-y-8">
-      <h1 (click)="navigateToAbout()">About</h1>
-      <h1 (click)="navigateToLogin()">Log In</h1>
-      <h1 (click)="navigateToSignUp()">Sign Up</h1>
-    </div>
+  <!-- Top Bar -->
+  <div class="w-full flex items-center justify-between px-4">
+    @if(data?.emailVerified && !data?.isAnonymous){
+    <h1 (click)="closeMenu()" class="text-white font-semibold text-xl tracking-wide">{{fullName}}</h1>
+    }
+    @else {
+    <div></div>
+    }
+    <img (click)="closeMenu()" src="assets/close.png" alt="Close" class="w-8 invert grayscale cursor-pointer hover:scale-110 transition" />
   </div>
+
+  <div class="w-11/12 h-[1px] bg-amber-400 opacity-50 rounded-full my-4"></div>
+
+  <!-- Navigation Links -->
+  <div class="flex flex-col items-center justify-center space-y-10 text-2xl sm:text-3xl mt-10">
+    <h1 (click)="navigateToAbout()"
+      class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">About</h1>
+    <h1 (click)="navigateToLogin()"
+      class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">Log In</h1>
+    <h1 (click)="navigateToSignUp()"
+      class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">Sign Up</h1>
+  </div>
+
+</div>
+
 </main>
 
 <router-outlet></router-outlet>
