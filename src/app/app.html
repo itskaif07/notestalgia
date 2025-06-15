@@ -1,4 +1,4 @@
-<main class="w-full h-full relative">
+<header class="sticky top-0 z-50 bg-[#1e1e1e]">
 
   <nav class="text-center text-[#111] flex items-center justify-between px-2 lg:px-10 bg-[#1e1e1e]  border-b border-amber-400/40">
     <div class="flex items-center space-x-4 py-3">
@@ -10,9 +10,9 @@
     </div>
     <div class="flex items-center space-x-20 sm:space-x-6 md:space-x-12 lg:space-x-14 xl:space-x-20 max-sm:hidden">
       <a routerLink="/"
-        class="font-semibold hover:text-2xl text-lg text-white hover:underline transition-all ease-in duration-200 hover:text-amber-300">Home</a>
+        class="font-semibold hover:text-2xl text-lg text-white hover:underline transition-all ease-in duration-200 hover:text-amber-300 cursor-pointer">Home</a>
       <a routerLink="/about"
-        class="font-semibold hover:text-2xl text-lg text-white hover:underline transition-all ease-in duration-200 hover:text-amber-300">About</a>
+        class="font-semibold hover:text-2xl text-lg text-white hover:underline transition-all ease-in duration-200 hover:text-amber-300 cursor-pointer">About</a>
 
 
       @if(data != null){
@@ -60,6 +60,8 @@
 
   <!-- Navigation Links -->
   <div class="flex flex-col items-center justify-center space-y-10 text-2xl sm:text-3xl mt-10">
+        <h1 (click)="navigateToHome()"
+      class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">Home</h1>
     <h1 (click)="navigateToAbout()"
       class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">About</h1>
     <h1 (click)="navigateToLogin()"
@@ -70,6 +72,6 @@
 
 </div>
 
-</main>
+</header>
 
 <router-outlet></router-outlet>

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth/auth-service';
 import { Auth, browserLocalPersistence, onAuthStateChanged, setPersistence, signInAnonymously } from '@angular/fire/auth';
@@ -27,18 +27,23 @@ export class App implements OnInit {
     this.getUserDetails();
     this.checkLoginAndVerification()
 
-    // if (document.visibilityState == 'visible') {
-    //   this.anonymousLogin()
-    // }
-    // else {
-    //   document.addEventListener('visibilitychange', () => {
-    //     if (document.visibilityState == 'visible') {
-    //       this.anonymousLogin()
-    //     }
-    //   })
-    // }
+    if (document.visibilityState == 'visible') {
+      this.anonymousLogin()
+    }
+    else {
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState == 'visible') {
+          this.anonymousLogin()
+        }
+      })
+    }
+
+    this.router.events.subscribe(event => {
+      console.log('Router Event:', event);
+    });
 
   }
+
 
   anonymousLogin() {
     setPersistence(this.auth, browserLocalPersistence)
@@ -84,11 +89,17 @@ export class App implements OnInit {
 
   closeMenu() {
     gsap.to("#menubar", {
-      x: "100%",    
+      x: "100%",
       opacity: 0,
       ease: "expo.in",
       duration: 0.5
     });
+  }
+
+
+  navigateToHome() {
+    this.router.navigate(['/'])
+    this.closeMenu()
   }
 
   navigateToAbout() {
