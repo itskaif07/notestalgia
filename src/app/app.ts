@@ -3,6 +3,9 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth/auth-service';
 import { Auth, browserLocalPersistence, onAuthStateChanged, setPersistence, signInAnonymously } from '@angular/fire/auth';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger)
 
 @Component({
   selector: 'app-root',

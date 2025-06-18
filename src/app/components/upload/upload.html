@@ -1,0 +1,158 @@
+<div class="h-screen w-full flex flex-col items-start justify-center space-y-10">
+    <div class="w-full flex flex-col items-center justify-start text-white py-6 px-10 space-y-3">
+        <h1 class="text-3xl font-bold">Upload Your Handwritten Notes</h1>
+        <p class="">Share your knowledge, inspire others, and earn with every download.</p>
+    </div>
+
+    <div class="w-full flex items-start justify-center h-full">
+        <!-- Left Side  -->
+        <div class="flex flex-col space-y-20 pl-10 pt-10 text-white w-[30%] border-r border-gray-700">
+            <!-- Step 1 -->
+            <div class="flex items-start space-x-4">
+                <div class="h-5 w-5 rounded-full bg-yellow-400 mt-1"></div>
+                <div>
+                    <h2 class="font-bold text-lg">Upload Notes</h2>
+                    <p class="text-sm text-gray-400">Upload your notes and proceed</p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="flex items-start space-x-4">
+                <div class="h-5 w-5 rounded-full border-2 border-white mt-1"></div>
+                <div>
+                    <h2 class="font-bold text-lg">Fill In The Details</h2>
+                    <p class="text-sm text-gray-400">Add title, subject, etc.</p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="flex items-start space-x-4">
+                <div class="h-5 w-5 rounded-full border-2 border-white mt-1"></div>
+                <div>
+                    <h2 class="font-bold text-lg">Submit</h2>
+                    <p class="text-sm text-gray-400">Review & submit your note</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side -->
+
+        <form class="h-full w-[70%] flex flex-col items-center justify-start">
+
+            <div id="phase1" class="w-full h-full flex flex-col items-center justify-start space-y-5">
+                <label for="uploadFile"
+                    class="w-11/12 h-2/3 border border-dashed border-amber-200 rounded-2xl flex flex-col items-center justify-center cursor-pointer">
+                    <img src="assets/upload.png" alt="upload file" class="w-24">
+                    <h1 class="text-2xl font-semibold text-white tracking-wide">Upload Your File</h1>
+                    <p class="text-base text-white text-opacity-80 mt-1">Drag & drop or click to select a file</p>
+                    <input type="file" name="" id="uploadFile" class="hidden">
+                </label>
+
+                <div class="w-11/12 flex items-center justify-end">
+                    <button id="button1" type="button" (click)="phase1Animation()"
+                        class="bg-amber-300 rounded w-36 h-12 hover:bg-amber-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer">Next</button>
+                </div>
+            </div>
+
+            <div id="phase2" class="w-full h-full flex-col items-center justify-start space-y-5 hidden px-4">
+                <div class="w-full flex items-center justify-center space-x-6">
+                    <div class="w-1/2 space-y-4">
+                        <div class="flex flex-col space-y-1">
+                            <label for="title" class="text-sm text-white">Title</label>
+                            <input id="title" type="text" placeholder="Enter title"
+                                class="bg-transparent border placeholder:text-sm  rounded-lg px-4 py-2 focus:outline-none  text-white placeholder-white placeholder-opacity-60" />
+                        </div>
+
+                        <div class="flex flex-col space-y-1">
+                            <label for="category" class="text-sm text-white">Category</label>
+                            <select name="" id="subject"
+                                class="bg-transparent border placeholder:text-sm  rounded-lg px-4 py-2 focus:outline-none  text-white placeholder-white placeholder-opacity-60">
+                                <option value="#" class="text-sm">Select a Category</option>
+                            </select>
+                        </div>
+
+                        <div class="flex flex-col space-y-1">
+                            <label for="subject" class="text-sm text-white">Subject</label>
+
+                            <select name="" id="subject"
+                                class="bg-transparent border placeholder:text-sm  rounded-lg px-4 py-2 focus:outline-none  text-white placeholder-white placeholder-opacity-60">
+                                <option value="#" class="text-sm">Select a Subject</option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="w-1/2 h-full">
+                        <label for="fileInput"
+                            class="border border-dashed border-amber-200 h-full rounded-2xl flex flex-col text-white items-center justify-center cursor-pointer">
+                            <img src="assets/uploadImage.png" alt="" class="invert grayscale w-28">
+                            <h1>Upload a thumbnail of your file</h1>
+                            <h1>(optional)</h1>
+                        </label>
+                        <input type="file" id="fileInput" class="hidden" accept="image/*">
+                    </div>
+                </div>
+
+                <div class="flex flex-col space-y-1 w-full">
+                    <label for="description" class="text-sm text-white">Description (optional)</label>
+                    <textarea id="description" rows="4" placeholder="Enter description"
+                        class="bg-transparent border placeholder:text-sm  rounded-lg px-4 py-2 focus:outline-none text-white placeholder-white placeholder-opacity-60"></textarea>
+                </div>
+
+                <div class="w-full flex items-center justify-between">
+                    <button id="back2" type="button" (click)="phase2BackAnimation()"
+                        class="bg-blue-300 rounded w-36 h-12 hover:bg-blue-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer">Back</button>
+
+                    <button id="button2" type="button" (click)="phase2Animation()"
+                        class="bg-amber-300 rounded w-36 h-12 hover:bg-amber-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer">Next</button>
+                </div>
+            </div>
+
+
+            <div id="phase3" class="w-full h-full hidden items-center justify-center flex-col px-6 py-4 space-y-6">
+
+                <div
+                    class="w-full max-h-96 h-80 flex items-center justify-between bg-[#1e1e1e] rounded-2xl shadow-lg overflow-hidden">
+
+                    <div class="w-2/3 h-full flex flex-col justify-center px-6 py-4 text-white space-y-3">
+                        <h1 class="text-2xl font-bold tracking-wide text-amber-300">Title Will Be Here</h1>
+                        <h2 class="text-lg font-medium opacity-80">Subject: <span class="font-normal">Subject
+                                Name</span></h2>
+                        <h2 class="text-lg font-medium opacity-80">Category: <span class="font-normal">Category
+                                Name</span></h2>
+                    </div>
+
+                    <div class="w-1/3 h-full">
+                        <img src="https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D"
+                            alt="Preview"
+                            class="w-full h-full object-cover object-center rounded-l-none rounded-r-2xl" />
+                    </div>
+                </div>
+
+                <div class="w-full flex-1 text-white overflow-y-auto px-2">
+                    <p class="text-base leading-relaxed tracking-wide max-w-4xl mx-auto">
+                        <span class="font-semibold">Description:</span> Lorem ipsum dolor sit amet consectetur
+                        adipisicing elit. Eaque
+                        maiores, nobis sequi, ea saepe odit est labore delectus tempora accusamus aperiam ad asperiores
+                        autem quisquam
+                        corporis cum. Tempora, ducimus vitae. Praesentium ullam iste impedit molestias nemo commodi
+                        odio, dolorem veritatis
+                        quae id hic omnis magnam praesentium possimus nesciunt itaque molestiae. Pariatur ad cumque
+                        exercitationem.
+                    </p>
+                </div>
+
+                <div class="w-full flex items-center justify-between pt-4">
+                    <button id="back3" type="button" (click)="phase3BackAnimation()"
+                        class="bg-blue-300 text-black rounded w-36 h-12 font-semibold hover:bg-blue-400 transition-all duration-300 ease-in-out hover:scale-105">
+                        Back
+                    </button>
+                    <button id="button3" type="submit"
+                        class="bg-amber-300 text-black rounded w-36 h-12 font-semibold hover:bg-amber-400 transition-all duration-300 ease-in-out hover:scale-105">
+                        Submit
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

@@ -5,6 +5,7 @@ import { Login } from './components/auth/login/login';
 import { Signup } from './components/auth/signup/signup';
 import { PasswordReset } from './components/auth/password-reset/password-reset';
 import { AuthCallBack } from './components/auth/auth-call-back/auth-call-back';
+import { Upload } from './components/upload/upload';
 
 export const routes: Routes = [
 
@@ -35,6 +36,13 @@ export const routes: Routes = [
     {
         path: 'password-reset',
         component: PasswordReset
+    },
+
+    //Upload
+
+    {
+        path: 'upload',
+        component: Upload
     }
 
 
