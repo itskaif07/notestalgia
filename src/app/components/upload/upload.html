@@ -37,64 +37,130 @@
 
         <!-- Right Side -->
 
-        <form class="h-full w-[70%] flex flex-col items-center justify-start">
+        <form [formGroup]="uploadForm" class="h-full w-[70%] flex flex-col items-center justify-start"
+            (ngSubmit)="formSubmit()">
+
+            <!-- Phase1 -->
 
             <div id="phase1" class="w-full h-full flex flex-col items-center justify-start space-y-5">
+
+                <!-- 👇 Combined Preview + Upload Box -->
                 <label for="uploadFile"
-                    class="w-11/12 h-2/3 border border-dashed border-amber-200 rounded-2xl flex flex-col items-center justify-center cursor-pointer">
+                    class="w-11/12 h-2/3 border border-dashed border-amber-200 rounded-2xl flex flex-col items-center justify-center cursor-pointer space-y-3">
+
+                    @if (selectedFileName) {
+                    <p class="text-xl font-semibold text-amber-400">📄 {{ selectedFileName }}</p>
+                    <p class="text-white text-sm opacity-70">(Click to change)</p>
+                    }
+                    @else {
                     <img src="assets/upload.png" alt="upload file" class="w-24">
                     <h1 class="text-2xl font-semibold text-white tracking-wide">Upload Your File</h1>
                     <p class="text-base text-white text-opacity-80 mt-1">Drag & drop or click to select a file</p>
-                    <input type="file" name="" id="uploadFile" class="hidden">
+                    }
+
+                    <!-- 👇 Always keep the input -->
+                    <input type="file" id="uploadFile" class="hidden" accept="application/pdf"
+                        (change)="selectFile($event)" />
+
+                    <!-- 👇 Validation message -->
+                    @if (uploadForm.get('fileUrl')?.touched && uploadForm.get('fileUrl')?.invalid) {
+                    @if (uploadForm.get('fileUrl')?.errors?.['required']) {
+                    <p class="text-sm text-red-500">File is required</p>
+                    }
+                    }
+
                 </label>
 
+                <!-- 👇 Always visible Next button -->
                 <div class="w-11/12 flex items-center justify-end">
                     <button id="button1" type="button" (click)="phase1Animation()"
-                        class="bg-amber-300 rounded w-36 h-12 hover:bg-amber-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer">Next</button>
+                        [disabled]="uploadForm.get('fileUrl')?.invalid"
+                        class="bg-amber-300 rounded w-36 h-12 hover:bg-amber-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer disabled:bg-amber-100 disabled:cursor-not-allowed">
+                        Next
+                    </button>
                 </div>
+
             </div>
+
+            <!-- Phase2 -->
+
 
             <div id="phase2" class="w-full h-full flex-col items-center justify-start space-y-5 hidden px-4">
                 <div class="w-full flex items-center justify-center space-x-6">
                     <div class="w-1/2 space-y-4">
                         <div class="flex flex-col space-y-1">
                             <label for="title" class="text-sm text-white">Title</label>
-                            <input id="title" type="text" placeholder="Enter title"
-                                class="bg-transparent border placeholder:text-sm  rounded-lg px-4 py-2 focus:outline-none  text-white placeholder-white placeholder-opacity-60" />
+                            <input id="title" type="text" formControlName="title" placeholder="Enter title"
+                                class="bg-transparent border placeholder:text-sm  rounded-lg px-4 py-2 focus:outline-none  text-white placeholder-white placeholder-opacity-60">
+
+                            @if (uploadForm.get('title')?.touched && uploadForm.get('title')?.invalid) {
+                            @if(uploadForm.get('title')?.errors?.['required']){
+                            <p class="text-sm text-red-500">Title is required</p>
+                            }
+                            @if(uploadForm.get('title')?.errors?.['minLength']){
+                            <p class="text-sm text-red-500">Title must have atleast 3 letters</p>
+                            }
+                            }
                         </div>
 
                         <div class="flex flex-col space-y-1">
                             <label for="category" class="text-sm text-white">Category</label>
-                            <select name="" id="subject"
+                            <select id="category" formControlName="category"
                                 class="bg-transparent border placeholder:text-sm  rounded-lg px-4 py-2 focus:outline-none  text-white placeholder-white placeholder-opacity-60">
-                                <option value="#" class="text-sm">Select a Category</option>
+                                <option value="#" class="text-sm text-black">Select a Category</option>
+                                <option value="category1" class="text-sm text-black">category1</option>
                             </select>
+
+                            @if (uploadForm.get('category')?.touched && uploadForm.get('category')?.invalid) {
+                            @if(uploadForm.get('category')?.errors?.['required']){
+                            <p class="text-sm text-red-500">Category is required</p>
+                            }
+                            }
                         </div>
 
                         <div class="flex flex-col space-y-1">
                             <label for="subject" class="text-sm text-white">Subject</label>
 
-                            <select name="" id="subject"
+                            <select id="subject" formControlName="subject"
                                 class="bg-transparent border placeholder:text-sm  rounded-lg px-4 py-2 focus:outline-none  text-white placeholder-white placeholder-opacity-60">
-                                <option value="#" class="text-sm">Select a Subject</option>
+                                <option value="#" class="text-sm text-black">Select a Subject</option>
+                                <option value="subject1" class="text-sm text-black">Subject1</option>
                             </select>
+
+                            @if (uploadForm.get('subject')?.touched && uploadForm.get('subject')?.invalid) {
+                            @if(uploadForm.get('subject')?.errors?.['required']){
+                            <p class="text-sm text-red-500">Subject is required</p>
+                            }
+                            }
 
                         </div>
                     </div>
                     <div class="w-1/2 h-full">
+                        @if(thumbnailPreviewUrl){
+                        <label for="fileInput"
+                            class="h-72  rounded-2xl flex flex-col text-white items-center justify-center cursor-pointer">
+                            <img [src]="thumbnailPreviewUrl" class="w-full h-full object-cover rounded-xl"
+                                alt="Thumbnail preview">
+                            <input type="file" id="fileInput" class="hidden" accept="image/*"
+                                (change)="selectThumbnail($event)">
+                        </label>
+                        }
+                        @else {
                         <label for="fileInput"
                             class="border border-dashed border-amber-200 h-full rounded-2xl flex flex-col text-white items-center justify-center cursor-pointer">
                             <img src="assets/uploadImage.png" alt="" class="invert grayscale w-28">
                             <h1>Upload a thumbnail of your file</h1>
                             <h1>(optional)</h1>
                         </label>
-                        <input type="file" id="fileInput" class="hidden" accept="image/*">
+                        <input type="file" id="fileInput" class="hidden" accept="image/*"
+                            (change)="selectThumbnail($event)">
+                        }
                     </div>
                 </div>
 
                 <div class="flex flex-col space-y-1 w-full">
                     <label for="description" class="text-sm text-white">Description (optional)</label>
-                    <textarea id="description" rows="4" placeholder="Enter description"
+                    <textarea id="description" rows="4" placeholder="Enter description" formControlName="description"
                         class="bg-transparent border placeholder:text-sm  rounded-lg px-4 py-2 focus:outline-none text-white placeholder-white placeholder-opacity-60"></textarea>
                 </div>
 
@@ -103,10 +169,12 @@
                         class="bg-blue-300 rounded w-36 h-12 hover:bg-blue-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer">Back</button>
 
                     <button id="button2" type="button" (click)="phase2Animation()"
-                        class="bg-amber-300 rounded w-36 h-12 hover:bg-amber-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer">Next</button>
+                        [disabled]="uploadForm.get('title')?.invalid || uploadForm.get('category')?.invalid || uploadForm.get('subject')?.invalid"
+                        class="bg-amber-300 rounded w-36 h-12 hover:bg-amber-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer disabled:bg-amber-100 disabled:cursor-not-allowed">Next</button>
                 </div>
             </div>
 
+            <!-- Phase 3 -->
 
             <div id="phase3" class="w-full h-full hidden items-center justify-center flex-col px-6 py-4 space-y-6">
 
@@ -114,30 +182,27 @@
                     class="w-full max-h-96 h-80 flex items-center justify-between bg-[#1e1e1e] rounded-2xl shadow-lg overflow-hidden">
 
                     <div class="w-2/3 h-full flex flex-col justify-center px-6 py-4 text-white space-y-3">
-                        <h1 class="text-2xl font-bold tracking-wide text-amber-300">Title Will Be Here</h1>
-                        <h2 class="text-lg font-medium opacity-80">Subject: <span class="font-normal">Subject
-                                Name</span></h2>
-                        <h2 class="text-lg font-medium opacity-80">Category: <span class="font-normal">Category
-                                Name</span></h2>
-                    </div>
+                        <h1 class="text-2xl font-bold tracking-wide text-amber-300">{{title || ''}}</h1>
+                        @if (selectedFileName) {
+                        <h2 class="text-lg text-amber-400 font-bold">{{selectedFileName}}</h2>
+                        }
+                        <h2 class="text-lg font-medium opacity-80">Subject: <span class="font-normal">{{subject ||
+                                ''}}</span></h2>
+                        <h2 class="text-lg font-medium opacity-80">Category: <span class="font-normal">{{category ||
+                                ''}}</span></h2>
 
+
+                    </div>
                     <div class="w-1/3 h-full">
-                        <img src="https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D"
-                            alt="Preview"
+                        <img [src]="thumbnailPreviewUrl || 'assets/thumbnail.jpg'" alt="Preview"
                             class="w-full h-full object-cover object-center rounded-l-none rounded-r-2xl" />
                     </div>
+
                 </div>
 
                 <div class="w-full flex-1 text-white overflow-y-auto px-2">
                     <p class="text-base leading-relaxed tracking-wide max-w-4xl mx-auto">
-                        <span class="font-semibold">Description:</span> Lorem ipsum dolor sit amet consectetur
-                        adipisicing elit. Eaque
-                        maiores, nobis sequi, ea saepe odit est labore delectus tempora accusamus aperiam ad asperiores
-                        autem quisquam
-                        corporis cum. Tempora, ducimus vitae. Praesentium ullam iste impedit molestias nemo commodi
-                        odio, dolorem veritatis
-                        quae id hic omnis magnam praesentium possimus nesciunt itaque molestiae. Pariatur ad cumque
-                        exercitationem.
+                        <span class="font-semibold">Description:</span> {{description || ''}}
                     </p>
                 </div>
 
@@ -146,8 +211,8 @@
                         class="bg-blue-300 text-black rounded w-36 h-12 font-semibold hover:bg-blue-400 transition-all duration-300 ease-in-out hover:scale-105">
                         Back
                     </button>
-                    <button id="button3" type="submit"
-                        class="bg-amber-300 text-black rounded w-36 h-12 font-semibold hover:bg-amber-400 transition-all duration-300 ease-in-out hover:scale-105">
+                    <button id="button3" type="submit" [disabled]="uploadForm.invalid"
+                        class="bg-amber-300 disabled:bg-amber-100 disabled:text-black disabled:cursor-not-allowed cursor-pointer text-black rounded w-36 h-12 font-semibold hover:bg-amber-400 transition-all duration-300 ease-in-out hover:scale-105">
                         Submit
                     </button>
                 </div>

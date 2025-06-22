@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth/auth-service';
 import { Auth, browserLocalPersistence, onAuthStateChanged, setPersistence, signInAnonymously } from '@angular/fire/auth';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { filter } from 'rxjs';
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -28,46 +29,30 @@ export class App implements OnInit {
 
   ngOnInit() {
     this.getUserDetails();
-    this.checkLoginAndVerification()
 
     if (document.visibilityState == 'visible') {
-      this.anonymousLogin()
     }
     else {
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState == 'visible') {
-          this.anonymousLogin()
         }
       })
     }
 
-    this.router.events.subscribe(event => {
-      console.log('Router Event:', event);
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      // Use timeout to let view render before scroll
+      setTimeout(() => {
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+        window.scrollTo({ top: 0 });
+      }, 50);
     });
 
   }
 
 
-  anonymousLogin() {
-    setPersistence(this.auth, browserLocalPersistence)
-      .then(() => {
-        return signInAnonymously(this.auth)
-      }, error => {
-        console.log('Error returned with', error)
-      })
-  }
-
-  checkLoginAndVerification() {
-    this.authService.getCurrentUser().subscribe(user => {
-      if (user) {
-        if (!user.emailVerified && !user.isAnonymous) {
-          this.router.navigate(['/auth-callback']);
-        } else {
-          console.log('User is verified or anonymous');
-        }
-      }
-    });
-  }
 
 
   getUserDetails() {

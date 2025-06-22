@@ -1,8 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Notes } from '../../services/notes/notes';
 import { Note } from '../../models/note';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import gsap from 'gsap';
+import { Auth } from '@angular/fire/auth';
+import { Router } from '@angular/router';
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import { AuthService } from '../../services/auth/auth-service';
 
 @Component({
   selector: 'app-upload',
@@ -10,72 +14,132 @@ import gsap from 'gsap';
   templateUrl: './upload.html',
   styleUrl: './upload.css'
 })
-export class Upload {
+export class Upload implements OnInit {
 
   notesService = inject(Notes)
+  authService = inject(AuthService)
+  router = inject(Router)
 
-  currentPhase:number = 1
-  totalPhases:number = 3
+  uid: string | null = null
+  selectedFileName: string | null = null
+  thumbnailPreviewUrl: string | null = null
+  title: string | null = null
+  category: string | null = null
+  subject: string | null = null
+  description: string | null = null
+  selectedFile: File | null = null;
 
+  ngOnInit(): void {
+    this.setFormState()
 
-  goNext() {
-    if (this.currentPhase < this.totalPhases) {
-      this.goToPhase(this.currentPhase + 1);
-    }
-  }
-
-  goBack() {
-    if (this.currentPhase > 1) {
-      this.goToPhase(this.currentPhase - 1);
-    }
-  }
-
-  goToPhase(phase: number) {
-    const current = document.getElementById(`phase${this.currentPhase}`);
-    const next = document.getElementById(`phase${phase}`);
-
-    if (!current || !next) return;
-
-    gsap.to(current, {
-      x: 200,
-      opacity: 0,
-      duration: 0.5,
-      ease: 'expo.inOut',
-      onComplete: () => {
-        current.classList.remove('flex');
-        current.classList.add('hidden');
-
-        next.classList.remove('hidden');
-        next.classList.add('flex');
-
-        gsap.fromTo(next, { x: -200, opacity: 0 }, {
-          x: 0,
-          opacity: 1,
-          duration: 0.5,
-          ease: 'expo.inOut'
-        });
-
-        this.currentPhase = phase;
+    this.authService.getCurrentUser().subscribe(user => {
+      if (user) {
+        this.uid = user.uid;
+        this.uploadForm.get('userId')?.setValue(user.uid);
+      } else {
+        this.router.navigate(['/login']);
       }
     });
   }
 
 
+  fb = inject(FormBuilder)
+
+  uploadForm: FormGroup = this.fb.group({})
+
+  setFormState() {
+    this.uploadForm = this.fb.group({
+      title: ['', [Validators.required, Validators.minLength(3)]],
+      description: [''],
+      price: 30,
+      category: ['', [Validators.required]],
+      subject: ['', [Validators.required]],
+      thumbnail: [''],
+      fileUrl: ['', [Validators.required]],
+      userId: [this.uid, [Validators.required]],
+      createdAt: [new Date()],
+    })
+  }
+
+  // File upload 
+
+  async selectFile(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.selectedFileName = file.name;
+      this.selectedFile = file; // 🔐 Store separately, NOT in form
+
+      const storage = getStorage();
+      const fileRef = ref(storage, `notes/${file.name}`);
+
+      try {
+        await uploadBytes(fileRef, file);
+        const downloadUrl = await getDownloadURL(fileRef);
+        this.uploadForm.get('fileUrl')?.setValue(downloadUrl); // ✅ Only URL goes in form
+      } catch (err) {
+        console.error('Upload failed:', err);
+      }
+    }
+  }
 
 
-  addNote(note: Note) {
+
+  //Thumbnail Upload
+
+ async selectThumbnail(event: Event) {
+  const input = event.target as HTMLInputElement;
+
+  if (input.files && input.files.length > 0) {
+    const file = input.files[0];
+    const storage = getStorage();
+    const thumbRef = ref(storage, `thumbnail/${file.name}`); // ✅ Fix here
+
+    try {
+      await uploadBytes(thumbRef, file);
+      const thumbnailUrl = await getDownloadURL(thumbRef);
+      this.thumbnailPreviewUrl = thumbnailUrl
+      this.uploadForm.get('thumbnail')?.setValue(thumbnailUrl); // ✅ Only URL saved
+    } catch (err) {
+      console.error('Upload failed:', err);
+    }
+  }
+}
+
+
+  //For Data Preview
+
+  getOtherFields() {
+    this.title = this.uploadForm.get('title')?.value
+    this.subject = this.uploadForm.get('subject')?.value
+    this.category = this.uploadForm.get('category')?.value
+    this.description = this.uploadForm.get('description')?.value
+    console.log(this.uploadForm.getRawValue())
+  }
+
+  // Submit
+
+  formSubmit() {
+
+    const note: Note = {
+      ...this.uploadForm.getRawValue(),
+      createdAt: new Date(),
+      price: 30,
+      userId: this.uid
+    }
+
     this.notesService.addNote(note).subscribe({
-      next: (res) => console.log('Note added!', res),
-      error: (err) => console.error('Error adding note:', err)
-    });
+      next: () => this.router.navigate(['/']),
+      error: (error) => console.log(error)
+    })
   }
 
-  phaseSteps() {
-    document.querySelector('#button1')
-  }
+
+
+  //Animation
 
   phase1Animation() {
-    this.goNext()
     gsap.to('#phase1', {
       x: 200,
       opacity: 0,
@@ -106,7 +170,6 @@ export class Upload {
   }
 
   phase2Animation() {
-    this.goNext()
     gsap.to('#phase2', {
       x: 200,
       opacity: 0,
@@ -134,10 +197,11 @@ export class Upload {
         document.getElementById('phase3')!.classList.add('flex')
       }
     })
+
+    this.getOtherFields()
   }
 
   phase2BackAnimation() {
-    this.goBack()
     gsap.to('#phase2', {
       x: 200,
       opacity: 0,
@@ -163,7 +227,6 @@ export class Upload {
   }
 
   phase3BackAnimation() {
-    this.goBack()
     gsap.to('#phase3', {
       x: 200,
       opacity: 0,

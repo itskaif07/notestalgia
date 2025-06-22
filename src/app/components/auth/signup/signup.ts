@@ -2,6 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth/auth-service';
+import { getAuth, GoogleAuthProvider, linkWithPopup } from '@angular/fire/auth';
+import { onAuthStateChanged, User } from 'firebase/auth';
 
 @Component({
   selector: 'app-signup',
@@ -15,6 +17,10 @@ export class Signup implements OnInit {
   fb = inject(FormBuilder);
   router = inject(Router);
 
+  auth = getAuth()
+  user: User | null = null;
+  googleProvider = new GoogleAuthProvider()
+
   errorMessage: string = '';
   successMessage: string = '';
 
@@ -22,6 +28,12 @@ export class Signup implements OnInit {
 
   ngOnInit() {
     this.setFormState();
+
+    
+    onAuthStateChanged(this.auth, (user) => {
+      this.user = user;
+      console.log("User initialized:", user);
+    });
   }
 
   setFormState() {
@@ -40,40 +52,40 @@ export class Signup implements OnInit {
     const password = this.signUpForm.value.password.trim();
     const confirmPassword = this.signUpForm.value.confirmPassword.trim();
 
-    if(this.signUpForm.valid){
-      if(this.signUpForm.value.password !== this.signUpForm.value.confirmPassword) {
+    if (this.signUpForm.valid) {
+      if (this.signUpForm.value.password !== this.signUpForm.value.confirmPassword) {
         this.errorMessage = 'Passwords do not match';
         return;
       }
 
-      this.authService.signUp(email, password, fullName).subscribe(()=>{
+      this.authService.signUp(email, password, fullName).subscribe(() => {
         this.successMessage = 'Registration successful!';
         this.errorMessage = '';
         this.signUpForm.reset();
         this.router.navigate(['/auth-callback']);
-      }, error =>{
-        if(error.code === 'auth/email-already-in-use') {
+      }, error => {
+        if (error.code === 'auth/email-already-in-use') {
           this.errorMessage = 'Email already in use. Please use a different email.';
         }
-        else if(error.code === 'auth/invalid-email') {
+        else if (error.code === 'auth/invalid-email') {
           this.errorMessage = 'Invalid email format. Please enter a valid email address.';
         }
-        else if(error.code === 'auth/weak-password') {
+        else if (error.code === 'auth/weak-password') {
           this.errorMessage = 'Weak password. Please enter a stronger password.';
         }
-        else if(error.code === 'auth/too-many-requests') {
+        else if (error.code === 'auth/too-many-requests') {
           this.errorMessage = 'Too many sign-up attempts. Please try again later.';
         }
-        else if(error.code === 'auth/operation-not-allowed') {
+        else if (error.code === 'auth/operation-not-allowed') {
           this.errorMessage = 'Sign-up operation is not allowed. Please contact support.';
         }
-        else if(error.code === 'auth/invalid-credential') {
+        else if (error.code === 'auth/invalid-credential') {
           this.errorMessage = 'Invalid credentials. Please check your email and password.';
         }
-        else if(error.code === 'auth/user-disabled') {
+        else if (error.code === 'auth/user-disabled') {
           this.errorMessage = 'User account is disabled. Please contact support.';
         }
-        else if(error.code === 'auth/invalid-action-code') {
+        else if (error.code === 'auth/invalid-action-code') {
           this.errorMessage = 'Invalid action code. Please try again.';
         }
         else {
@@ -83,14 +95,26 @@ export class Signup implements OnInit {
     }
   }
 
-  googleSignUp(){
-    this.authService.googleSignUp().subscribe({
-      next: () =>{
-        this.successMessage = 'Registration successful! Please log in.';
-        this.errorMessage = '';
-        this.signUpForm.reset();
-        this.router.navigate(['/']);
-      }
-    })
+  googleSignUp() {
+    if (this.user) {
+      linkWithPopup(this.user, this.googleProvider)
+        .then((result) => {
+          console.log("Anonymous account linked with Google", result.user);
+          this.router.navigate(['/']);
+        })
+        .catch((error) => {
+          console.error("Link failed", error);
+        });
+    }
+    else {
+      this.authService.googleSignUp().subscribe({
+        next: () => {
+          this.successMessage = 'Registration successful! Please log in.';
+          this.errorMessage = '';
+          this.signUpForm.reset();
+          this.router.navigate(['/']);
+        }
+      })
+    }
   }
 }

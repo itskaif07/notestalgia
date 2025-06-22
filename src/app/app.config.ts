@@ -1,10 +1,10 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withInMemoryScrolling, withViewTransitions } from '@angular/router';
 
 import { routes } from './app.routes';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
-import { getFirestore, provideFirestore} from '@angular/fire/firestore'
+import { getFirestore, provideFirestore } from '@angular/fire/firestore'
 
 const firebaseConfig = {
   apiKey: "AIzaSyCwGLnBqMwvQFJjn9wYZN5n4qUCYZp-_dU",
@@ -17,12 +17,18 @@ const firebaseConfig = {
 };
 
 export const appConfig: ApplicationConfig = {
-   providers: [
+  providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
+    provideRouter(routes,
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'enabled', // ✅ scrolls to top on route change
+        anchorScrolling: 'enabled',           // ✅ scrolls to #anchor links if used
+      }),
+      withViewTransitions()
+    ),
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
-    provideAuth(() => getAuth()), 
+    provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore())
   ]
 };

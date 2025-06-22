@@ -16,7 +16,7 @@
 
 
       @if(data != null){
-      @if(data?.emailVerified && !data?.isAnonymous){
+      @if(data?.emailVerified){
       <div class="flex items-center space-x-4">
         <h1 class="text-white font-medium text-lg">Hi, {{fullName}}</h1>
         <h1 class="text-white font-medium text-2xl">|</h1>
@@ -47,7 +47,7 @@
 
   <!-- Top Bar -->
   <div class="w-full flex items-center justify-between px-4">
-    @if(data?.emailVerified && !data?.isAnonymous){
+    @if(data?.emailVerified){
     <h1 (click)="closeMenu()" class="text-white font-semibold text-xl tracking-wide">{{fullName}}</h1>
     }
     @else {
@@ -72,6 +72,5 @@
 
 </div>
 
-</header>
-
 <router-outlet></router-outlet>
+</header>

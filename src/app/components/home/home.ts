@@ -16,19 +16,6 @@ export class Home implements OnInit {
   auth = inject(Auth)
 
   ngOnInit(): void {
-    onAuthStateChanged(this.auth, (user) => {
-      if (!user) {
-        this.authService.logInAsGuest().subscribe({
-          next: (res) => {
-            console.log(res.user)
-          },
-          error: (error) => console.error(error)
-        })
-      }
-      else {
-        console.warn('User is already logged in')
-      }
-    })
     this.heroAnimation()
   }
 

@@ -12,12 +12,7 @@ export class About implements OnInit {
   router = inject(Router)
 
   ngOnInit(): void {
-    if (!sessionStorage.getItem('reloaded')) {
-      sessionStorage.setItem('reloaded', 'true');
-      window.location.reload();
-    } else {
-      sessionStorage.removeItem('reloaded');
-    }
+   
   }
 
 }
