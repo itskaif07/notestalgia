@@ -1,16 +1,21 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Notes } from '../../services/notes/notes';
 import { Note } from '../../models/note';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import gsap from 'gsap';
-import { Auth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { AuthService } from '../../services/auth/auth-service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { noteSubjects } from '../../models/subject';
+import { NoteCategories } from '../../models/category';
+import { noteLevels } from '../../models/level';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-upload',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, PdfViewerModule, CommonModule],
   templateUrl: './upload.html',
   styleUrl: './upload.css'
 })
@@ -19,15 +24,27 @@ export class Upload implements OnInit {
   notesService = inject(Notes)
   authService = inject(AuthService)
   router = inject(Router)
+  sanitizer = inject(DomSanitizer)
+
+  subjectModel = noteSubjects
+  categoryModel = NoteCategories
+  levelModel = noteLevels
 
   uid: string | null = null
   selectedFileName: string | null = null
+  filePreviewUrl: SafeResourceUrl | null = null
   thumbnailPreviewUrl: string | null = null
   title: string | null = null
   category: string | null = null
+  level: string | null = null
   subject: string | null = null
   description: string | null = null
   selectedFile: File | null = null;
+  isShowingFilePreview: boolean = false
+
+  currentStep: number = 1; 
+
+
 
   ngOnInit(): void {
     this.setFormState()
@@ -42,6 +59,11 @@ export class Upload implements OnInit {
     });
   }
 
+  goToStep(step: number) {
+  this.currentStep = step;
+}
+
+
 
   fb = inject(FormBuilder)
 
@@ -53,6 +75,7 @@ export class Upload implements OnInit {
       description: [''],
       price: 30,
       category: ['', [Validators.required]],
+      level: ['', [Validators.required]],
       subject: ['', [Validators.required]],
       thumbnail: [''],
       fileUrl: ['', [Validators.required]],
@@ -69,7 +92,7 @@ export class Upload implements OnInit {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.selectedFileName = file.name;
-      this.selectedFile = file; // 🔐 Store separately, NOT in form
+      this.selectedFile = file;
 
       const storage = getStorage();
       const fileRef = ref(storage, `notes/${file.name}`);
@@ -77,7 +100,8 @@ export class Upload implements OnInit {
       try {
         await uploadBytes(fileRef, file);
         const downloadUrl = await getDownloadURL(fileRef);
-        this.uploadForm.get('fileUrl')?.setValue(downloadUrl); // ✅ Only URL goes in form
+
+        this.uploadForm.get('fileUrl')?.setValue(downloadUrl);
       } catch (err) {
         console.error('Upload failed:', err);
       }
@@ -88,24 +112,24 @@ export class Upload implements OnInit {
 
   //Thumbnail Upload
 
- async selectThumbnail(event: Event) {
-  const input = event.target as HTMLInputElement;
+  async selectThumbnail(event: Event) {
+    const input = event.target as HTMLInputElement;
 
-  if (input.files && input.files.length > 0) {
-    const file = input.files[0];
-    const storage = getStorage();
-    const thumbRef = ref(storage, `thumbnail/${file.name}`); // ✅ Fix here
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      const storage = getStorage();
+      const thumbRef = ref(storage, `thumbnail/${file.name}`);
 
-    try {
-      await uploadBytes(thumbRef, file);
-      const thumbnailUrl = await getDownloadURL(thumbRef);
-      this.thumbnailPreviewUrl = thumbnailUrl
-      this.uploadForm.get('thumbnail')?.setValue(thumbnailUrl); // ✅ Only URL saved
-    } catch (err) {
-      console.error('Upload failed:', err);
+      try {
+        await uploadBytes(thumbRef, file);
+        const thumbnailUrl = await getDownloadURL(thumbRef);
+        this.thumbnailPreviewUrl = thumbnailUrl
+        this.uploadForm.get('thumbnail')?.setValue(thumbnailUrl);
+      } catch (err) {
+        console.error('Upload failed:', err);
+      }
     }
   }
-}
 
 
   //For Data Preview
@@ -114,8 +138,14 @@ export class Upload implements OnInit {
     this.title = this.uploadForm.get('title')?.value
     this.subject = this.uploadForm.get('subject')?.value
     this.category = this.uploadForm.get('category')?.value
+    this.level = this.uploadForm.get('level')?.value
     this.description = this.uploadForm.get('description')?.value
-    console.log(this.uploadForm.getRawValue())
+  }
+
+  // File Preview
+
+  toggleFilePreview() {
+    this.isShowingFilePreview = !this.isShowingFilePreview
   }
 
   // Submit
@@ -140,6 +170,9 @@ export class Upload implements OnInit {
   //Animation
 
   phase1Animation() {
+
+    this.goToStep(2)
+
     gsap.to('#phase1', {
       x: 200,
       opacity: 0,
@@ -170,6 +203,9 @@ export class Upload implements OnInit {
   }
 
   phase2Animation() {
+
+    this.goToStep(3)
+
     gsap.to('#phase2', {
       x: 200,
       opacity: 0,
@@ -202,6 +238,7 @@ export class Upload implements OnInit {
   }
 
   phase2BackAnimation() {
+    this.goToStep(1)
     gsap.to('#phase2', {
       x: 200,
       opacity: 0,
@@ -227,6 +264,7 @@ export class Upload implements OnInit {
   }
 
   phase3BackAnimation() {
+    this.goToStep(2)
     gsap.to('#phase3', {
       x: 200,
       opacity: 0,
