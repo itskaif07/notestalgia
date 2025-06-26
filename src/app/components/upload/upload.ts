@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Notes } from '../../services/notes/notes';
 import { Note } from '../../models/note';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import gsap from 'gsap';
 import { Router } from '@angular/router';
@@ -15,7 +14,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-upload',
-  imports: [ReactiveFormsModule, PdfViewerModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './upload.html',
   styleUrl: './upload.css'
 })

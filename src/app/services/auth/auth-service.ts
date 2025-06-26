@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, authState, createUserWithEmailAndPassword, GoogleAuthProvider, sendEmailVerification, sendPasswordResetEmail, signInAnonymously, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from '@angular/fire/auth';
+import { Auth, authState, createUserWithEmailAndPassword, GoogleAuthProvider, sendEmailVerification, sendPasswordResetEmail, signInAnonymously, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile, User } from '@angular/fire/auth';
 import { BehaviorSubject, from, map, Observable, of, switchMap } from 'rxjs';
 
 @Injectable({
@@ -11,6 +11,7 @@ export class AuthService {
 
   userSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   user$: Observable<any> = this.userSubject.asObservable();
+
 
   constructor() {
     this.auth.onAuthStateChanged(user => {
@@ -29,11 +30,6 @@ export class AuthService {
   isLoggedIn$ = authState(this.auth).pipe(
     map(user => !!user) // Convert user object to boolean
   )
-
-  logInAsGuest(){
-    return from(signInAnonymously(this.auth))
-  }
-
 
 
   signUp(email: string, password: string, fullName: string): Observable<any> {
@@ -66,16 +62,19 @@ export class AuthService {
   logOut(): Observable<void> {
     return from(signOut(this.auth));
   }
-
   googleSignUp(): Observable<any> {
     const provider = new GoogleAuthProvider();
     return from(signInWithPopup(this.auth, provider)).pipe(
-      switchMap((credentials) => {
-        if (credentials) {
-          return from(updateProfile(credentials.user, { displayName: credentials.user.displayName, photoURL: credentials.user.photoURL }))
-        }
-        return of(null)
-      })
-    )
+      switchMap((credentials) =>
+        from(updateProfile(credentials.user, {
+          displayName: credentials.user.displayName,
+          photoURL: credentials.user.photoURL
+        })).pipe(
+          // Return credentials if needed
+          switchMap(() => of(credentials))
+        )
+      )
+    );
   }
+
 }

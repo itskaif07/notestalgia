@@ -6,6 +6,7 @@ import { Signup } from './components/auth/signup/signup';
 import { PasswordReset } from './components/auth/password-reset/password-reset';
 import { AuthCallBack } from './components/auth/auth-call-back/auth-call-back';
 import { Upload } from './components/upload/upload';
+import { Browse } from './components/browse/browse';
 
 export const routes: Routes = [
 
@@ -43,7 +44,12 @@ export const routes: Routes = [
     {
         path: 'upload',
         component: Upload
+    },
+
+    //Browse
+
+    {
+        path: 'browse',
+        component: Browse
     }
-
-
 ];

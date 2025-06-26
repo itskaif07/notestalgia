@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth/auth-service';
-import { Auth, browserLocalPersistence, onAuthStateChanged, setPersistence, signInAnonymously } from '@angular/fire/auth';
+import { Auth } from '@angular/fire/auth';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { filter } from 'rxjs';
+import { JsonPipe } from '@angular/common';
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -30,15 +31,6 @@ export class App implements OnInit {
   ngOnInit() {
     this.getUserDetails();
 
-    if (document.visibilityState == 'visible') {
-    }
-    else {
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState == 'visible') {
-        }
-      })
-    }
-
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
@@ -58,12 +50,17 @@ export class App implements OnInit {
   getUserDetails() {
     return this.authService.getCurrentUser().subscribe(user => {
       if (user) {
-        this.data = user
+        console.log(user);
+        this.data = user;
         this.fullName = user.displayName || '';
+        this.isAuthenticated = true;
+        this.isVerified = user.emailVerified; // ✅ add this
+      } else {
+        this.isAuthenticated = false;
+        this.isVerified = false;
       }
-    }, error => {
-      console.error('Error fetching user details:', error);
-    })
+    });
+
   }
 
   openMenu() {

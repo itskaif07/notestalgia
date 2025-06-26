@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore'
+import { HttpClient, provideHttpClient } from '@angular/common/http';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCwGLnBqMwvQFJjn9wYZN5n4qUCYZp-_dU",
@@ -18,6 +19,7 @@ const firebaseConfig = {
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideHttpClient(),
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes,
