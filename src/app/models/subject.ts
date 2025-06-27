@@ -49,5 +49,5 @@ export const noteSubjects: string[] = [
   'Civics',
   'Art Education',
   'Physical Education',
-  'Other'
+  'Others'
 ];

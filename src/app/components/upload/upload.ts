@@ -159,7 +159,7 @@ export class Upload implements OnInit {
     }
 
     this.notesService.addNote(note).subscribe({
-      next: () => this.router.navigate(['/']),
+      next: () => this.router.navigate(['/browse']),
       error: (error) => console.log(error)
     })
   }
