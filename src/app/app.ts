@@ -50,7 +50,6 @@ export class App implements OnInit {
   getUserDetails() {
     return this.authService.getCurrentUser().subscribe(user => {
       if (user) {
-        console.log(user);
         this.data = user;
         this.fullName = user.displayName || '';
         this.isAuthenticated = true;

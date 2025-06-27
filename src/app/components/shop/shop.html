@@ -1,11 +1,12 @@
+@if(noteData != null){
+
 <div class="w-full h-full flex items-center justify-between px-2 space-x-3 py-6">
 
     <!-- Left Section -->
 
     <div class="w-1/4 h-full flex justify-center py-12 shadow-2xl rounded-2xl bg-[#1E1E1E]">
         <div class="w-11/12 h-[28rem] rounded-2xl shadow-2xl flex justify-center">
-            <img src="https://images.unsplash.com/photo-1743656619958-68d85790bdb4?q=80&w=465&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt="Thumbnail"
+            <img src="{{noteData.thumbnail || 'assets/thumbnail.png'}}" alt="Thumbnail"
                 class="w-full h-full object-cover object-center flex items-center justify-center rounded-2xl">
         </div>
     </div>
@@ -17,7 +18,7 @@
         <!-- Title + Rating Block -->
         <div class="flex flex-col items-start space-y-3">
             <h1 class="text-3xl md:text-4xl font-bold leading-snug">
-                This Is The Title
+                {{noteData.title || ''}}
             </h1>
 
             <div class="flex items-center space-x-3 text-sm text-gray-300">
@@ -45,26 +46,22 @@
 
             <!-- Metadata Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-sm text-gray-300 w-full">
-                <p><span class="font-semibold text-white">Category:</span> A Placeholder Category</p>
-                <p><span class="font-semibold text-white">Level:</span> A Placeholder Level</p>
-                <p><span class="font-semibold text-white">Subject:</span> A Placeholder Subject</p>
+                <p><span class="font-semibold text-white">Category:</span> {{noteData.category}}</p>
+                <p><span class="font-semibold text-white">Level:</span> {{noteData.level}}</p>
+                <p><span class="font-semibold text-white">Subject:</span> {{noteData.subject}}</p>
             </div>
 
             <!-- Description Section -->
+            @if(noteData.description){
             <div class="space-y-2">
                 <h2 class="text-lg font-semibold tracking-wide">
                     Description
                 </h2>
                 <p class="text-sm text-gray-300 leading-relaxed">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui porro harum assumenda quia voluptate
-                    delectus voluptatem? Ut cupiditate quod accusamus eligendi, fuga porro quis. Pariatur blanditiis et
-                    esse
-                    ipsam asperiores. Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium dolores
-                    voluptatum
-                    tempore harum minus animi quos pariatur ullam laboriosam provident, officia autem quidem dignissimos
-                    culpa, ipsum molestias aperiam mollitia fugit!
+                    {{noteData.description}}
                 </p>
             </div>
+            }
 
         </div>
 
@@ -84,7 +81,8 @@
             <h1 class="font-bold tracking-wide text-base">Set Order</h1>
 
             <!-- PDF Preview Block -->
-            <div class="w-full bg-white/5 border border-white/20 rounded-xl overflow-hidden cursor-pointer hover:bg-white/10 transition duration-200 ease-in">
+            <div
+                class="w-full bg-white/5 border border-white/20 rounded-xl overflow-hidden cursor-pointer hover:bg-white/10 transition duration-200 ease-in">
 
                 <div class="flex items-center justify-between px-4 py-3">
                     <div class="flex items-center space-x-3">
@@ -131,3 +129,4 @@
     </div>
 
 </div>
+}

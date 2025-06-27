@@ -55,7 +55,7 @@ export const routes: Routes = [
     },
 
     {
-        path: 'shop',
+        path: 'shop/:id',
         component: Shop
     }
 ];
