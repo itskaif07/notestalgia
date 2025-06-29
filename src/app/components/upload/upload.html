@@ -1,5 +1,6 @@
 <div class="h-full w-full flex flex-col items-start justify-center space-y-10 overflow-x-hidden">
-    <div class="w-full flex flex-col items-center justify-center text-center lg:justify-start text-white py-6 px-10 space-y-3">
+    <div
+        class="w-full flex flex-col items-center justify-center text-center lg:justify-start text-white py-6 px-10 space-y-3">
         <h1 class="text-3xl font-bold">Upload Your Handwritten Notes</h1>
         <p class="">Share your knowledge, inspire others, and earn with every download.</p>
     </div>
@@ -57,11 +58,21 @@
 
             <!-- Phase1 -->
 
+            @if(errorMessageForFile){
+            <div class="w-1/4 bg-red-500 text-white p-2 rounded-lg mb-2">
+                <p class="text-center">{{ errorMessageForFile }}</p>
+            </div>
+            }
+
             <div id="phase1" class="w-full h-full flex flex-col items-center justify-start space-y-5">
 
                 <!-- 👇 Combined Preview + Upload Box -->
-                <label for="uploadFile"
-                    class="w-11/12 h-[40vh] xl:h-[50vh] border border-dashed border-amber-200 rounded-2xl flex flex-col items-center justify-center cursor-pointer space-y-3">
+                <label for="uploadFile" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+                    (drop)="onFileDrop($event)" [ngStyle]="{
+                        'border-color': isDragging ? '#f59e0b' : '#fbbf24',
+                        'border-style': (isDragging || isDropped) ? 'solid' : 'dashed'
+                        }"
+                    class="w-11/12 h-[40vh] xl:h-[50vh] border border-dashed  rounded-2xl flex flex-col items-center justify-center cursor-pointer space-y-3">
 
                     @if (selectedFileName) {
                     <p class="text-xl font-semibold text-amber-400">📄 {{ selectedFileName }}</p>
@@ -75,7 +86,7 @@
 
                     <!-- 👇 Always keep the input -->
                     <input type="file" id="uploadFile" class="hidden" accept="application/pdf"
-                        (change)="selectFile($event)" />
+                        (change)="fileUploadOnClick($event)">
 
                     <!-- 👇 Validation message -->
                     @if (uploadForm.get('fileUrl')?.touched && uploadForm.get('fileUrl')?.invalid) {
@@ -201,7 +212,8 @@
                         class="bg-transparent border placeholder:text-sm  rounded-lg px-4 py-2 focus:outline-none text-white placeholder-white placeholder-opacity-60"></textarea>
                 </div>
 
-                <div class="w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between space-y-6 sm:space-y-0">
+                <div
+                    class="w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between space-y-6 sm:space-y-0">
                     <button id="back2" type="button" (click)="phase2BackAnimation()"
                         class="bg-blue-300 rounded w-full sm:w-36 h-12 hover:bg-blue-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer">Back</button>
 
@@ -219,7 +231,8 @@
                     class="w-full flex flex-col-reverse xl:flex-row items-center justify-center xl:space-x-6 bg-[#1e1e1e] rounded-2xl shadow-lg overflow-hidden">
 
                     <!-- Text Section -->
-                    <div class="w-full xl:w-2/3 h-full flex flex-col justify-center items-center xl:items-start px-6 py-4 text-white space-y-6">
+                    <div
+                        class="w-full xl:w-2/3 h-full flex flex-col justify-center items-center xl:items-start px-6 py-4 text-white space-y-6">
 
                         <!-- Title -->
                         <h1 class="text-2xl font-bold tracking-wide text-amber-300">{{ title || '' }}</h1>
@@ -230,7 +243,8 @@
                         }
 
                         <!-- Meta Info (Simplified) -->
-                        <div class="space-y-1 text-white flex flex-col items-center xl:items-start justify-center w-full">
+                        <div
+                            class="space-y-1 text-white flex flex-col items-center xl:items-start justify-center w-full">
                             <div class="flex items-center justify-center xl:justify-start gap-2 w-full">
                                 <span class="text-gray-400 font-medium">📘 Subject:</span>
                                 <span class="opacity-90">{{ subject || 'N/A' }}</span>
@@ -284,7 +298,8 @@
                 </div>
                 }
 
-                <div class="w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between space-y-6 sm:space-y-0">
+                <div
+                    class="w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between space-y-6 sm:space-y-0">
                     <button id="back3" type="button" (click)="phase3BackAnimation()"
                         class="bg-blue-300 text-black rounded w-full sm:w-36 h-12 font-semibold hover:bg-blue-400 transition-all duration-300 ease-in-out hover:scale-105">
                         Back

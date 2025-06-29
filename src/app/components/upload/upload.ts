@@ -41,7 +41,11 @@ export class Upload implements OnInit {
   selectedFile: File | null = null;
   isShowingFilePreview: boolean = false
 
-  currentStep: number = 1; 
+  currentStep: number = 1;
+  isDragging = false;
+  isDropped = false;
+
+  errorMessageForFile: string | null = null;
 
 
 
@@ -59,8 +63,8 @@ export class Upload implements OnInit {
   }
 
   goToStep(step: number) {
-  this.currentStep = step;
-}
+    this.currentStep = step;
+  }
 
 
 
@@ -85,25 +89,67 @@ export class Upload implements OnInit {
 
   // File upload 
 
-  async selectFile(event: Event) {
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    this.isDragging = true;
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    this.isDragging = false;
+  }
+
+  async handleFileUpload(file: File) {
+    this.selectedFile = file;
+    this.selectedFileName = file.name;
+    this.filePreviewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file));
+
+    const storage = getStorage();
+    const fileRef = ref(storage, `notes/${file.name}`);
+
+    try {
+      await uploadBytes(fileRef, file);
+      const downloadUrl = await getDownloadURL(fileRef);
+
+      this.uploadForm.get('fileUrl')?.setValue(downloadUrl);
+    } catch (err) {
+      console.error('Upload failed:', err);
+
+    }
+  }
+
+  fileUploadOnClick(event: Event) {
     const input = event.target as HTMLInputElement;
 
     if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.selectedFileName = file.name;
-      this.selectedFile = file;
-
-      const storage = getStorage();
-      const fileRef = ref(storage, `notes/${file.name}`);
-
-      try {
-        await uploadBytes(fileRef, file);
-        const downloadUrl = await getDownloadURL(fileRef);
-
-        this.uploadForm.get('fileUrl')?.setValue(downloadUrl);
-      } catch (err) {
-        console.error('Upload failed:', err);
+      if (input.files[0].type !== 'application/pdf') {
+        this.errorMessageForFile = 'Please upload a valid PDF file.';
+        return;
       }
+      const file = input.files[0];
+      this.handleFileUpload(file);
+    }
+  }
+
+  onFileDrop(event: DragEvent) {
+    event.preventDefault();
+    this.isDragging = false;
+    this.isDropped = true;
+
+    if (event.dataTransfer && event.dataTransfer.files.length === 0) {
+      this.errorMessageForFile = 'No file dropped. Please try again.';
+      return;
+    }
+
+    if(event.dataTransfer && event.dataTransfer.files[0].type !== 'application/pdf') {
+      this.errorMessageForFile = 'Please upload a valid PDF file.';
+      return;
+    }
+
+    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
+      const file = event.dataTransfer.files[0];
+      this.errorMessageForFile = null
+      this.handleFileUpload(file);
     }
   }
 
