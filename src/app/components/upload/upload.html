@@ -1,4 +1,4 @@
-<div class="h-screen w-full flex flex-col items-start justify-center space-y-10">
+<div class="h-full w-full flex flex-col items-start justify-center space-y-10">
     <div class="w-full flex flex-col items-center justify-start text-white py-6 px-10 space-y-3">
         <h1 class="text-3xl font-bold">Upload Your Handwritten Notes</h1>
         <p class="">Share your knowledge, inspire others, and earn with every download.</p>
@@ -6,7 +6,7 @@
 
     <div class="w-full flex items-start justify-center h-full">
         <!-- Left Side  -->
-        <div class="flex flex-col space-y-20 pl-10 pt-10 text-white w-[30%] border-r border-gray-700">
+        <div class="hidden xl:flex flex-col space-y-20 pl-10 pt-10 text-white w-[30%] border-r border-gray-700">
 
             <!-- Step 1 -->
             <div class="flex items-start space-x-4">
@@ -52,7 +52,7 @@
 
         <!-- Right Side -->
 
-        <form [formGroup]="uploadForm" class="h-full w-[70%] flex flex-col items-center justify-start"
+        <form [formGroup]="uploadForm" class="h-full lg:h-[60vh] w-11/12 xl:w-[70%] flex flex-col items-center justify-start"
             (ngSubmit)="formSubmit()">
 
             <!-- Phase1 -->
@@ -61,7 +61,7 @@
 
                 <!-- 👇 Combined Preview + Upload Box -->
                 <label for="uploadFile"
-                    class="w-11/12 h-2/3 border border-dashed border-amber-200 rounded-2xl flex flex-col items-center justify-center cursor-pointer space-y-3">
+                    class="w-11/12 h-[40vh] border border-dashed border-amber-200 rounded-2xl flex flex-col items-center justify-center cursor-pointer space-y-3">
 
                     @if (selectedFileName) {
                     <p class="text-xl font-semibold text-amber-400">📄 {{ selectedFileName }}</p>
@@ -100,9 +100,10 @@
             <!-- Phase2 -->
 
 
-            <div id="phase2" class="w-full h-full flex-col items-center justify-start space-y-5 hidden px-4">
-                <div class="w-full flex items-center justify-center space-x-6">
-                    <div class="w-1/2 space-y-4">
+            <div id="phase2" class="w-full h-full flex-col items-center justify-start space-y-5 hidden px-4 ">
+
+                <div class="w-full flex flex-col-reverse xl:flex-row items-center justify-center lg:space-x-6 ">
+                    <div class="w-full h-full xl:w-1/2 space-y-4">
                         <div class="flex flex-col space-y-1">
                             <label for="title" class="text-sm text-white">Title</label>
                             <input id="title" type="text" formControlName="title" placeholder="Enter title"
@@ -171,7 +172,7 @@
 
                         </div>
                     </div>
-                    <div class="w-1/2 h-full">
+                    <div class="w-full xl:w-1/2 h-[40vh] mb-10 xl:mb-0">
                         @if(thumbnailPreviewUrl){
                         <label for="fileInput"
                             class="h-72  rounded-2xl flex flex-col text-white items-center justify-center cursor-pointer">
