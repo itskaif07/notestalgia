@@ -6,13 +6,21 @@ export const NoteCategories: string[] = [
   "Previous Year Papers",
   "Solved Examples",
   "Assignments",
+  "Computer Programs",
+  "MS Office",
+  "Presentations",
+  "Project Reports",
+  "Research Papers",
+  "Thesis",
+  "Case Studies",
+  "E-books",
   "Mind Maps",
   "Diagrams & Charts",
-  "Practice Worksheets",       // ➕ For extra drills or practice
-  "Quick Revision Notes",      // ➕ Condensed notes for last-minute revision
-  "Conceptual Notes",          // ➕ Focused on understanding theory
-  "Lab Manuals / Practicals",  // ➕ For science subjects
-  "Study Planners / Schedules",// ➕ For organizing study routines
-  "Syllabus & Blueprints",     // ➕ If users upload exam patterns or official docs
+  "Practice Worksheets",
+  "Quick Revision Notes",
+  "Conceptual Notes",
+  "Lab Manuals / Practicals",
+  "Study Planners / Schedules",
+  "Syllabus & Blueprints",
   "Others"
 ];

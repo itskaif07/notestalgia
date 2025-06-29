@@ -1,6 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { NoteCategories } from '../../models/category';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Notes } from '../../services/notes/notes';
 import { RouterLink } from '@angular/router';
@@ -24,22 +23,25 @@ export class Browse implements OnInit {
 
   lsList: any[] | null = null
 
-  http = inject(HttpClient)
 
   ngOnInit(): void {
-    this.getNotes()
+    this.getNotes();
   }
 
+  // Fetch Notes
 
   getNotes() {
     this.noteService.getAllNotes().subscribe({
       next: (data) => {
         this.allNotesList = data
         this.notesList = data
+        this.sortByNewestFirst()
       },
       error: (err) => console.log(err)
     })
   }
+
+  // Filter Methods
 
   filterByCategory(category: string) {
     if (this.notesList && this.allNotesList) {
@@ -51,7 +53,87 @@ export class Browse implements OnInit {
     }
   }
 
-  resetCategory(){
+  //Search Method
+
+  searchNotes(event: any) {
+    const searchTerm = (event.target as HTMLInputElement).value.trim().toLowerCase();
+
+    if (this.allNotesList && this.notesList) {
+      this.notesList = this.allNotesList.filter(note => {
+        return note.title?.trim().toLowerCase().includes(searchTerm) ||
+          note.category?.trim().toLowerCase().includes(searchTerm) ||
+          note.subject?.trim().toLowerCase().includes(searchTerm) ||
+          note.level?.trim().toLowerCase().includes(searchTerm);
+      })
+    }
+  }
+
+  // Sort Methods
+
+  HandleSortChange(event: any) {
+    const value = (event.target as HTMLSelectElement).value;
+
+    switch (value) {
+      case 'oldest':
+        this.sortByOldestFirst();
+        break;
+      case 'newest':
+        this.sortByNewestFirst();
+        break;
+      case 'title:asc':
+        this.sortByTitleAsc();
+        break;
+      case 'title:desc':
+        this.sortByTitleDesc();
+    }
+  }
+
+  sortByOldestFirst() {
+    if (this.notesList && this.allNotesList) {
+      this.activeCategory = null;
+
+      this.notesList = [...this.allNotesList].sort((a, b) => {
+        const dateA = a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0;
+        const dateB = b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0;
+        return dateA - dateB;
+      });
+    }
+  }
+
+  sortByNewestFirst() {
+    if ((this.notesList && this.allNotesList)) {
+      this.notesList = [...this.allNotesList].sort((a, b) => {
+        const dateA = a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0;
+        const dateB = b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0;
+        return dateB - dateA;
+      })
+    }
+  }
+
+  sortByTitleAsc() {
+    if (this.notesList && this.allNotesList) {
+      this.notesList = [...this.allNotesList].sort((a, b) => {
+        const titleA = a.title?.toLowerCase() || '';
+        const titleB = b.title?.toLowerCase() || '';
+        return titleA.localeCompare(titleB);
+      })
+    }
+  }
+
+  sortByTitleDesc() {
+    if (this.notesList && this.allNotesList) {
+      this.notesList = [...this.allNotesList].sort((a, b) => {
+        const titleA = a.title?.toLowerCase() || '';
+        const titleB = b.title?.toLowerCase() || '';
+        return titleB.localeCompare(titleA);
+      })
+    }
+  }
+
+
+  // Reset Methods
+
+  resetList() {
     this.activeCategory = null
     this.notesList = this.allNotesList
   }
