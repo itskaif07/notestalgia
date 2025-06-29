@@ -1,10 +1,10 @@
 @if(noteData != null){
 
-<div class="w-full h-full flex items-center justify-between px-2 space-x-3 py-6">
+<div class="w-full h-full flex flex-col lg:flex-row items-center justify-between px-2 space-x-3 py-6">
 
     <!-- Left Section -->
 
-    <div class="w-1/4 h-full flex justify-center py-12 shadow-2xl rounded-2xl bg-[#1E1E1E]">
+    <div class="w-4/5 lg:w-1/4 h-full flex justify-center py-12 shadow-2xl rounded-2xl bg-[#1E1E1E]">
         <div class="w-11/12 h-[28rem] rounded-2xl shadow-2xl flex justify-center">
             <img src="{{noteData.thumbnail ? noteData.thumbnail : 'assets/thumbnail.jpg'}}" alt="Thumbnail"
                 class="w-full h-full object-cover object-center flex items-center justify-center rounded-2xl">
@@ -13,7 +13,7 @@
 
     <!-- Middle Section -->
 
-    <div class="w-1/2 shadow-2xl rounded-2xl py-6 px-6 text-white flex flex-col items-start justify-start space-y-6">
+    <div class="w-4/5 lg:w-1/2 shadow-2xl rounded-2xl py-6 px-6 text-white flex flex-col items-start justify-start space-y-6">
 
         <!-- Title + Rating Block -->
         <div class="flex flex-col items-start space-y-3">
@@ -72,11 +72,11 @@
 
     <!-- Right Section -->
 
-    <div class="w-1/4 flex flex-col items-start justify-start py-6 space-y-6 shadow-2xl rounded-2xl">
+    <div class="w-4/5 lg:w-1/4 flex flex-col items-center justify-center py-6 space-y-6 shadow-2xl rounded-2xl">
 
         <!-- Order Section -->
         <div id="order"
-            class="w-11/12 border border-white/20 bg-[#1E1E1E] flex flex-col items-start justify-start text-white px-4 py-4 rounded-xl space-y-5 self-start">
+            class="w-11/12 border border-white/20 bg-[#1E1E1E] flex flex-col items-start justify-start text-white px-4 py-4 rounded-xl space-y-5">
 
             <h1 class="font-bold tracking-wide text-base">Set Order</h1>
 
@@ -117,7 +117,7 @@
 
         <!-- Ratings Section -->
         <div id="ratings"
-            class="w-11/12 border border-white/20 bg-[#1E1E1E] flex flex-col items-start justify-start text-white px-4 py-4 rounded-xl space-y-4 self-start">
+            class="w-11/12 border border-white/20 bg-[#1E1E1E] flex flex-col items-start justify-start text-white px-4 py-4 rounded-xl space-y-4">
 
             <h1 class="font-bold tracking-wide text-base">Ratings & Reviews</h1>
 
