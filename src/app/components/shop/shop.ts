@@ -1,10 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Notes } from '../../services/notes/notes';
+import { SafeUrlPipe } from '../../pipes/safe-url-pipe';
 
 @Component({
   selector: 'app-shop',
-  imports: [],
+  imports: [SafeUrlPipe],
   templateUrl: './shop.html',
   styleUrl: './shop.css'
 })
@@ -24,9 +25,6 @@ export class Shop implements OnInit {
   getDocumentId() {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.docId = params.get('id')
-      if (this.docId) {
-        console.log(this.docId)
-      }
     })
   }
 
@@ -35,7 +33,7 @@ export class Shop implements OnInit {
       this.noteService.getNote(this.docId).subscribe({
         next: (docSnap) => {
           if (docSnap.exists()) {
-            this.noteData = docSnap.data(); // 👈 Actual note content here
+            this.noteData = docSnap.data();
             console.log('Note data:', this.noteData);
           } else {
             console.log('No such document exists!');
