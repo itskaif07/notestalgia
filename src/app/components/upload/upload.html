@@ -1,5 +1,5 @@
-<div class="h-full w-full flex flex-col items-start justify-center space-y-10">
-    <div class="w-full flex flex-col items-center justify-start text-white py-6 px-10 space-y-3">
+<div class="h-full w-full flex flex-col items-start justify-center space-y-10 overflow-x-hidden">
+    <div class="w-full flex flex-col items-center justify-center text-center lg:justify-start text-white py-6 px-10 space-y-3">
         <h1 class="text-3xl font-bold">Upload Your Handwritten Notes</h1>
         <p class="">Share your knowledge, inspire others, and earn with every download.</p>
     </div>
@@ -52,7 +52,7 @@
 
         <!-- Right Side -->
 
-        <form [formGroup]="uploadForm" class="h-full lg:h-[60vh] w-11/12 xl:w-[70%] flex flex-col items-center justify-start"
+        <form [formGroup]="uploadForm" class="h-full  w-11/12 xl:w-[70%] flex flex-col items-center justify-start"
             (ngSubmit)="formSubmit()">
 
             <!-- Phase1 -->
@@ -61,7 +61,7 @@
 
                 <!-- 👇 Combined Preview + Upload Box -->
                 <label for="uploadFile"
-                    class="w-11/12 h-[40vh] border border-dashed border-amber-200 rounded-2xl flex flex-col items-center justify-center cursor-pointer space-y-3">
+                    class="w-11/12 h-[40vh] xl:h-[50vh] border border-dashed border-amber-200 rounded-2xl flex flex-col items-center justify-center cursor-pointer space-y-3">
 
                     @if (selectedFileName) {
                     <p class="text-xl font-semibold text-amber-400">📄 {{ selectedFileName }}</p>
@@ -90,7 +90,7 @@
                 <div class="w-11/12 flex items-center justify-end">
                     <button id="button1" type="button" (click)="phase1Animation()"
                         [disabled]="uploadForm.get('fileUrl')?.invalid"
-                        class="bg-amber-300 rounded w-36 h-12 hover:bg-amber-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer disabled:bg-amber-100 disabled:cursor-not-allowed">
+                        class="bg-amber-300 rounded w-full sm:w-36 h-12 hover:bg-amber-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer disabled:bg-amber-100 disabled:cursor-not-allowed">
                         Next
                     </button>
                 </div>
@@ -175,7 +175,7 @@
                     <div class="w-full xl:w-1/2 h-[40vh] mb-10 xl:mb-0">
                         @if(thumbnailPreviewUrl){
                         <label for="fileInput"
-                            class="h-72  rounded-2xl flex flex-col text-white items-center justify-center cursor-pointer">
+                            class="h-72 rounded-2xl flex flex-col text-white items-center justify-center cursor-pointer">
                             <img [src]="thumbnailPreviewUrl" class="w-full h-full object-cover rounded-xl"
                                 alt="Thumbnail preview">
                             <input type="file" id="fileInput" class="hidden" accept="image/*"
@@ -201,13 +201,13 @@
                         class="bg-transparent border placeholder:text-sm  rounded-lg px-4 py-2 focus:outline-none text-white placeholder-white placeholder-opacity-60"></textarea>
                 </div>
 
-                <div class="w-full flex items-center justify-between">
+                <div class="w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between space-y-6 sm:space-y-0">
                     <button id="back2" type="button" (click)="phase2BackAnimation()"
-                        class="bg-blue-300 rounded w-36 h-12 hover:bg-blue-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer">Back</button>
+                        class="bg-blue-300 rounded w-full sm:w-36 h-12 hover:bg-blue-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer">Back</button>
 
                     <button id="button2" type="button" (click)="phase2Animation()"
                         [disabled]="uploadForm.get('title')?.invalid || uploadForm.get('category')?.invalid || uploadForm.get('subject')?.invalid"
-                        class="bg-amber-300 rounded w-36 h-12 hover:bg-amber-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer disabled:bg-amber-100 disabled:cursor-not-allowed">Next</button>
+                        class="bg-amber-300 rounded w-full sm:w-36 h-12 hover:bg-amber-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer disabled:bg-amber-100 disabled:cursor-not-allowed">Next</button>
                 </div>
             </div>
 
@@ -216,10 +216,10 @@
             <div id="phase3" class="w-full h-full hidden items-center justify-center flex-col px-6 py-4 space-y-6">
 
                 <div
-                    class="w-full max-h-96 h-80 flex items-center justify-between bg-[#1e1e1e] rounded-2xl shadow-lg overflow-hidden">
+                    class="w-full flex flex-col-reverse xl:flex-row items-center justify-center xl:space-x-6 bg-[#1e1e1e] rounded-2xl shadow-lg overflow-hidden">
 
                     <!-- Text Section -->
-                    <div class="w-2/3 h-full flex flex-col justify-center px-6 py-4 text-white space-y-6">
+                    <div class="w-full xl:w-2/3 h-full flex flex-col justify-center items-center xl:items-start px-6 py-4 text-white space-y-6">
 
                         <!-- Title -->
                         <h1 class="text-2xl font-bold tracking-wide text-amber-300">{{ title || '' }}</h1>
@@ -230,16 +230,16 @@
                         }
 
                         <!-- Meta Info (Simplified) -->
-                        <div class="space-y-1 text-white">
-                            <div class="flex items-center gap-2">
+                        <div class="space-y-1 text-white flex flex-col items-center xl:items-start justify-center w-full">
+                            <div class="flex items-center justify-center xl:justify-start gap-2 w-full">
                                 <span class="text-gray-400 font-medium">📘 Subject:</span>
                                 <span class="opacity-90">{{ subject || 'N/A' }}</span>
                             </div>
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center justify-center xl:justify-start gap-2 w-full">
                                 <span class="text-gray-400 font-medium">🧠 Level:</span>
                                 <span class="opacity-90">{{ level || 'N/A' }}</span>
                             </div>
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center justify-center xl:justify-start gap-2 w-full">
                                 <span class="text-gray-400 font-medium">📂 Category:</span>
                                 <span class="opacity-90">{{ category || 'N/A' }}</span>
                             </div>
@@ -270,9 +270,9 @@
                     </div>
 
                     <!-- Thumbnail Section -->
-                    <div class="w-1/3 h-full">
+                    <div class="xl:w-1/3 w-4/5 h-72">
                         <img [src]="thumbnailPreviewUrl || 'assets/thumbnail.jpg'" alt="Preview"
-                            class="w-full h-full object-cover object-center rounded-l-none rounded-r-2xl" />
+                            class="w-full h-full object-cover object-center rounded-2xl xl:rounded-l-none xl:rounded-r-2xl" />
                     </div>
                 </div>
 
@@ -284,13 +284,13 @@
                 </div>
                 }
 
-                <div class="w-full flex items-center justify-between pt-4">
+                <div class="w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between space-y-6 sm:space-y-0">
                     <button id="back3" type="button" (click)="phase3BackAnimation()"
-                        class="bg-blue-300 text-black rounded w-36 h-12 font-semibold hover:bg-blue-400 transition-all duration-300 ease-in-out hover:scale-105">
+                        class="bg-blue-300 text-black rounded w-full sm:w-36 h-12 font-semibold hover:bg-blue-400 transition-all duration-300 ease-in-out hover:scale-105">
                         Back
                     </button>
                     <button id="button3" type="submit" [disabled]="uploadForm.invalid"
-                        class="bg-amber-300 disabled:bg-amber-100 disabled:text-black disabled:cursor-not-allowed cursor-pointer text-black rounded w-36 h-12 font-semibold hover:bg-amber-400 transition-all duration-300 ease-in-out hover:scale-105">
+                        class="bg-amber-300 disabled:bg-amber-100 disabled:text-black disabled:cursor-not-allowed cursor-pointer text-black rounded w-full sm:w-36 h-12 font-semibold hover:bg-amber-400 transition-all duration-300 ease-in-out hover:scale-105">
                         Submit
                     </button>
                 </div>
