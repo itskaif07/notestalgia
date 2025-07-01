@@ -2,10 +2,11 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Notes } from '../../services/notes/notes';
 import { SafeUrlPipe } from '../../pipes/safe-url-pipe';
+import { AddReview } from "../reviews/add-review/add-review";
 
 @Component({
   selector: 'app-shop',
-  imports: [SafeUrlPipe],
+  imports: [SafeUrlPipe, AddReview],
   templateUrl: './shop.html',
   styleUrl: './shop.css'
 })
@@ -14,6 +15,10 @@ export class Shop implements OnInit {
   activatedRoute = inject(ActivatedRoute)
   docId: string | null = null
   noteData:any = null
+
+  reviewsList: any[] | null =  null
+
+  isShowingReviewBox: boolean = false
 
   noteService = inject(Notes)
 

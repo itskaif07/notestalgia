@@ -91,6 +91,16 @@ export class App implements OnInit {
     this.closeMenu()
   }
 
+  navigateToUpload() {
+    this.router.navigate(['/upload'])
+    this.closeMenu()
+  }
+
+  navigateToBrowse() {
+    this.router.navigate(['/browse'])
+    this.closeMenu()
+  }
+
   navigateToLogin() {
     this.router.navigate(['/login'])
     this.closeMenu()

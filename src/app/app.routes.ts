@@ -8,6 +8,7 @@ import { AuthCallBack } from './components/auth/auth-call-back/auth-call-back';
 import { Upload } from './components/upload/upload';
 import { Browse } from './components/browse/browse';
 import { Shop } from './components/shop/shop';
+import { AddReview } from './components/reviews/add-review/add-review';
 
 export const routes: Routes = [
 
@@ -57,5 +58,12 @@ export const routes: Routes = [
     {
         path: 'shop/:id',
         component: Shop
+    },
+
+    {
+        path: 'reviews',
+        component: AddReview
     }
+
+
 ];
