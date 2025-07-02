@@ -1,7 +1,7 @@
 @if(noteData != null){
 
-@if(isShowingReviewBox){
-<app-add-review (cancelled)="isShowingReviewBox = false" [noteId]="noteData.id"
+@if(isShowingReviewBox && docId != null){
+<app-add-review (cancelled)="isShowingReviewBox = false" [noteId]="docId"
     class="w-full h-full z-40 flex items-center justify-center backdrop-blur-lg fixed inset-0 "></app-add-review>
 }
 
@@ -131,16 +131,28 @@
 
             <div class="w-full flex items-center justify-between ">
                 <h1 class="font-bold tracking-wide text-base">Ratings & Reviews</h1>
+                @if(!userReviewed){
                 <div (click)="isShowingReviewBox = true"
                     class="w-fit px-4 py-2 flex items-center justify-center text-black bg-gray-300 text-sm text-center font-semibold hover:bg-gray-400 cursor-pointer hover:scale-105 transition-all duration-200 ease-in-out">
                     Add Review</div>
+                }
             </div>
 
             <!-- Placeholder content -->
             @if(reviewsList && reviewsList.length > 0){
             @for (review of reviewsList; track $index) {
-            <div class="border-b border-white/20 py-2">
-                <p class="text-sm text-gray-300">{{review.text}}</p>
+            <div class="border-b border-white/20 py-2 space-y-3 w-full">
+                <div class="flex items-center space-x-1 bg-green-600 p-1 w-fit">
+                    <p class="font-semibold  text-[#1e1e1e]">{{review.rating}}</p>
+                    <p>⭐</p>
+                </div>
+
+                <p class="text-sm text-white text-justify">{{review.review}}</p>
+
+                <div class="flex items-center justify-start space-x-2 ">
+                    <p class="text-xs text-gray-300">Reviewed by: {{review.userName || 'Anonymous'}} on
+                        {{review.createdAt.seconds * 1000 | date:'dd · MMMM · yyyy'}}</p>
+                </div>
             </div>
             }
             }

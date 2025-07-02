@@ -19,6 +19,7 @@ export class AddReview implements OnInit {
 
   @Input() noteId: string = ''
   @Output() cancelled = new EventEmitter<void>();
+  
   reviewForm: FormGroup = this.fb.group({})
 
   selectedRating: number = 0;
@@ -52,18 +53,13 @@ export class AddReview implements OnInit {
 
   submitReview(noteId: string) {
 
-    console.log('submit triggered without current user')
-
     if (!this.currentUser) {
       console.error('No user is currently logged in.');
       return;
     }
 
-    console.log('submit triggered after current user check:', this.currentUser);
-
     const rating = this.selectedRating
     const review = this.reviewForm.get('review')?.value;
-
 
     this.reviewForm.patchValue({
       rating: rating,
@@ -72,13 +68,12 @@ export class AddReview implements OnInit {
       userName: this.currentUser.displayName || 'Anonymous',
       userImage: this.currentUser.photoURL || 'https://t3.ftcdn.net/jpg/05/87/76/66/360_F_587766653_PkBNyGx7mQh9l1XXPtCAq1lBgOsLl6xH.jpg'
     })
-    console.log('Review Form Value:', this.reviewForm.value);
-    
+
     this.reviewService.addReview(this.reviewForm.value, noteId).subscribe({
       next: (response) => {
-        console.log('Review submitted successfully:', response);
         this.reviewForm.reset();
         this.selectedRating = 0;
+        console.log('REVIEW SAVED SUCCESSFULLY ✅');
         this.cancelled.emit()
       },
       error: (error) => {
