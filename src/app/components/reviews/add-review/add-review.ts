@@ -19,7 +19,7 @@ export class AddReview implements OnInit {
 
   @Input() noteId: string = ''
   @Output() cancelled = new EventEmitter<void>();
-  
+
   reviewForm: FormGroup = this.fb.group({})
 
   selectedRating: number = 0;
@@ -27,6 +27,7 @@ export class AddReview implements OnInit {
   username: string | null = null
   userImage: string | null = null
   currentUser: User | null = null
+  errorMessage: string | null = null
 
   selectRating(rating: number) {
     this.selectedRating = rating;
@@ -52,6 +53,12 @@ export class AddReview implements OnInit {
   }
 
   submitReview(noteId: string) {
+
+    if (this.selectedRating == 0) {
+      this.errorMessage = 'Please select a rating.';
+      return;
+    }
+
 
     if (!this.currentUser) {
       console.error('No user is currently logged in.');

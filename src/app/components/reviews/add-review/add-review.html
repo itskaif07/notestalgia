@@ -15,6 +15,10 @@
         </div>
     </div>
 
+    @if(errorMessage){
+    <p class="text-red-500 text-sm">{{ errorMessage }}</p>
+    }
+
     <!-- Textarea -->
     <div class="w-full md:w-2/3 flex flex-col space-y-2">
         <label class="text-sm font-semibold text-gray-300">Your Review</label>
@@ -29,7 +33,8 @@
 
     <!-- Buttons -->
     <div class="flex justify-end space-x-4 pt-4 w-full md:w-2/3">
-        <button (click)="cancelled.emit()" class="px-4 py-2 rounded bg-gray-600 hover:bg-gray-700 transition-all text-white text-sm cursor-pointer">
+        <button type="button" (click)="cancelled.emit()"
+            class="px-4 py-2 rounded bg-gray-600 hover:bg-gray-700 transition-all text-white text-sm cursor-pointer">
             Cancel
         </button>
         <button type="submit" [disabled]="selectedRating === 0"

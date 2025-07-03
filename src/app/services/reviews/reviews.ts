@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, query, where } from '@angular/fire/firestore';
-import { from, Observable } from 'rxjs';
+import { from, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -29,4 +29,12 @@ export class Reviews {
     const q = query(reviewRef, where('userId', '==', userId))
     return collectionData(q, { idField: 'id' }) as Observable<any>;
   }
+
+  getReviewCount(noteId: string): Observable<number> {
+    const reviewsCollection = collection(this.fireStore, `notes/${noteId}/reviews`);
+    return collectionData(reviewsCollection).pipe(
+      map(reviews => reviews.length)
+    );
+  }
+  
 }

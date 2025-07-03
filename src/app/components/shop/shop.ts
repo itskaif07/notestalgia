@@ -6,6 +6,7 @@ import { AddReview } from "../reviews/add-review/add-review";
 import { Reviews } from '../../services/reviews/reviews';
 import { DatePipe } from '@angular/common';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-shop',
@@ -24,19 +25,21 @@ export class Shop implements OnInit {
   docId: string | null = null
   reviewsList: any[] | null = null
   currentUser: User | null = null
+  reviewCount: number | null = null
+  averageRatings: number | null = null
 
   isShowingReviewBox: boolean = false
   userReviewed: boolean = false
 
 
   ngOnInit(): void {
-  onAuthStateChanged(this.auth, (user) => {
-    if (user) {
-      this.currentUser = user;
-      this.getDocumentId(); // Call only after user is ready
-    }
-  });
-}
+    onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        this.currentUser = user;
+        this.getDocumentId(); // Call only after user is ready
+      }
+    });
+  }
 
 
   getDocumentId() {
@@ -45,7 +48,7 @@ export class Shop implements OnInit {
       if (this.docId != null) {
         this.getNoteDetails()
         this.getReviewsList()
-        this.checkUserReview();
+        this.checkUserReview()
       }
     })
   }
@@ -85,11 +88,46 @@ export class Shop implements OnInit {
           if (review.length > 0) {
             this.userReviewed = true;
           }
+          this.getReviewsCount()
           console.log('User has reviewed:', this.userReviewed, review);
         },
         error: (err) => console.error('Error checking user review:', err)
       })
     }
+  }
+
+  getReviewsCount(): void {
+    if (this.docId) {
+      this.reviewService.getReviewCount(this.docId).subscribe({
+        next: (count) => {
+          this.reviewCount = count;
+          console.log('Review count:', this.reviewCount);
+          this.getRatingAverage()
+        },
+        error: (err) => {
+          console.error('Error fetching review count:', err);
+        }
+      });
+    }
+  }
+
+  getRatingAverage() {
+    if (this.reviewsList && this.reviewsList.length > 0) {
+      const totalRating = this.reviewsList.reduce((acc, review) => acc + review.rating, 0);
+      this.averageRatings = totalRating / this.reviewsList.length;
+      console.log('Average Ratings:', this.averageRatings);
+    }
+    else {
+      console.log('else is triggering')
+    }
+  }
+
+  editReview(){
+
+  }
+
+  deleteReview(){
+    
   }
 
 }

@@ -27,11 +27,18 @@
                 {{noteData.title || ''}}
             </h1>
 
+            @if(reviewCount != null && reviewCount > 0 && averageRatings != null){
             <div class="flex items-center space-x-3 text-sm text-gray-300">
-                <p>⭐ 4.5 Ratings</p>
+                <p>⭐ {{averageRatings || 0}} Ratings</p>
                 <span class="text-gray-500">•</span>
-                <p>2.5k Reviews</p>
+                @if(reviewCount > 1){
+                <p>{{reviewCount}} Reviews</p>
+                }
+                @else {
+                <p>{{reviewCount}} Review</p>
+                }
             </div>
+            }
         </div>
 
         <!-- Price Section -->
@@ -141,19 +148,38 @@
             <!-- Placeholder content -->
             @if(reviewsList && reviewsList.length > 0){
             @for (review of reviewsList; track $index) {
-            <div class="border-b border-white/20 py-2 space-y-3 w-full">
-                <div class="flex items-center space-x-1 bg-green-600 p-1 w-fit">
-                    <p class="font-semibold  text-[#1e1e1e]">{{review.rating}}</p>
+            <div class="border-b border-white/20 py-4 space-y-3 w-full relative group">
+                <!-- Rating Box -->
+                <div class="flex items-center space-x-1 bg-green-600 px-2 py-1 w-fit rounded">
+                    <p class="font-semibold text-[#1e1e1e]">{{ review.rating }}</p>
                     <p>⭐</p>
                 </div>
 
-                <p class="text-sm text-white text-justify">{{review.review}}</p>
+                <!-- Review Text -->
+                <p class="text-sm text-white text-justify">{{ review.review }}</p>
 
-                <div class="flex items-center justify-start space-x-2 ">
-                    <p class="text-xs text-gray-300">Reviewed by: {{review.userName || 'Anonymous'}} on
-                        {{review.createdAt.seconds * 1000 | date:'dd · MMMM · yyyy'}}</p>
+                <!-- Footer Info -->
+                <div class="flex items-center justify-start space-x-2">
+                    <p class="text-xs text-gray-300">
+                        Reviewed by: {{ review.userName || 'Anonymous' }} on
+                        {{ review.createdAt.seconds * 1000 | date: 'dd · MMMM · yyyy' }}
+                    </p>
+                </div>
+
+                <!-- Action Buttons (visible on hover) -->
+                <div
+                    class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex space-x-2">
+                    <button (click)="editReview()"
+                        class="bg-yellow-400 text-black text-xs px-3 py-1 rounded hover:bg-yellow-500 transition-all font-semibold cursor-pointer">
+                        Edit
+                    </button>
+                    <button (click)="deleteReview()"
+                        class="bg-red-500 text-white text-xs px-3 py-1 rounded hover:bg-red-700 transition-all font-semibold cursor-pointer">
+                        Delete
+                    </button>
                 </div>
             </div>
+
             }
             }
             @else {
