@@ -10,7 +10,7 @@ import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-shop',
-  imports: [SafeUrlPipe, AddReview, DatePipe],
+  imports: [AddReview, DatePipe],
   templateUrl: './shop.html',
   styleUrl: './shop.css'
 })
@@ -27,6 +27,7 @@ export class Shop implements OnInit {
   currentUser: User | null = null
   reviewCount: number | null = null
   averageRatings: number | null = null
+  reviewId: string | null = null
 
   isShowingReviewBox: boolean = false
   userReviewed: boolean = false
@@ -74,7 +75,6 @@ export class Shop implements OnInit {
       this.reviewService.getAllReviews(this.docId).subscribe({
         next: (reviews) => {
           this.reviewsList = reviews;
-          console.log('Reviews:', this.reviewsList);
         },
         error: (err) => console.error('Error fetching reviews:', err)
       })
@@ -88,10 +88,15 @@ export class Shop implements OnInit {
           if (review.length > 0) {
             this.userReviewed = true;
           }
+          else {
+            this.userReviewed = false;
+          }
           this.getReviewsCount()
-          console.log('User has reviewed:', this.userReviewed, review);
         },
-        error: (err) => console.error('Error checking user review:', err)
+        error: (err) => {
+          console.error('Error checking user review:', err)
+          this.userReviewed = false
+        }
       })
     }
   }
@@ -101,7 +106,6 @@ export class Shop implements OnInit {
       this.reviewService.getReviewCount(this.docId).subscribe({
         next: (count) => {
           this.reviewCount = count;
-          console.log('Review count:', this.reviewCount);
           this.getRatingAverage()
         },
         error: (err) => {
@@ -115,19 +119,25 @@ export class Shop implements OnInit {
     if (this.reviewsList && this.reviewsList.length > 0) {
       const totalRating = this.reviewsList.reduce((acc, review) => acc + review.rating, 0);
       this.averageRatings = totalRating / this.reviewsList.length;
-      console.log('Average Ratings:', this.averageRatings);
-    }
-    else {
-      console.log('else is triggering')
     }
   }
 
-  editReview(){
-
+  editReview() {
+    this.isShowingReviewBox = true;
   }
 
-  deleteReview(){
-    
+  deleteReview(reviewId: string) {
+    if (this.docId && this.reviewsList) {
+      this.reviewService.deleteReview(reviewId, this.docId).subscribe({
+        next: () => {
+          console.log('Review deleted successfully');
+          this.userReviewed = false
+          this.getReviewsList(); // Refresh the reviews list after deletion
+        },
+        error: (err) => console.log('Error deleting review:', err)
+      })
+    }
+
   }
 
 }

@@ -7,13 +7,11 @@ import { BehaviorSubject, from, map, Observable, of, switchMap } from 'rxjs';
 })
 export class AuthService {
 
-  auth = inject(Auth);
-
   userSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   user$: Observable<any> = this.userSubject.asObservable();
 
 
-  constructor() {
+  constructor(private auth: Auth) {
     this.auth.onAuthStateChanged(user => {
       if (user) {
         this.userSubject.next(user);
@@ -26,10 +24,6 @@ export class AuthService {
   getCurrentUser(): Observable<any> {
     return this.user$;
   }
-
-  isLoggedIn$ = authState(this.auth).pipe(
-    map(user => !!user) // Convert user object to boolean
-  )
 
 
   signUp(email: string, password: string, fullName: string): Observable<any> {
@@ -62,6 +56,8 @@ export class AuthService {
   logOut(): Observable<void> {
     return from(signOut(this.auth));
   }
+
+  
   googleSignUp(): Observable<any> {
     const provider = new GoogleAuthProvider();
     return from(signInWithPopup(this.auth, provider)).pipe(

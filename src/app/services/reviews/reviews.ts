@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, query, where } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, deleteDoc, doc, Firestore, query, updateDoc, where } from '@angular/fire/firestore';
 import { from, map, Observable } from 'rxjs';
 
 @Injectable({
@@ -7,11 +7,18 @@ import { from, map, Observable } from 'rxjs';
 })
 export class Reviews {
 
-  fireStore = inject(Firestore)
+  constructor(private fireStore: Firestore) {
+
+  }
 
   addReview(data: any, noteId: string): Observable<any> {
     const reviewsCollection = collection(this.fireStore, `notes/${noteId}/reviews`)
     return from(addDoc(reviewsCollection, data))
+  }
+
+  editReview(reviewId: string, noteId: string, data: any): Observable<any> {
+    const reviewRef = doc(this.fireStore, `notes/${noteId}/reviews/${reviewId}`);
+    return from(updateDoc(reviewRef, data))
   }
 
   deleteReview(reviewId: string, noteId: string): Observable<any> {
@@ -36,5 +43,5 @@ export class Reviews {
       map(reviews => reviews.length)
     );
   }
-  
+
 }

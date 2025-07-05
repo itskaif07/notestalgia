@@ -110,6 +110,7 @@ export class Upload implements OnInit {
     try {
       await uploadBytes(fileRef, file);
       const downloadUrl = await getDownloadURL(fileRef);
+      
 
       this.uploadForm.get('fileUrl')?.setValue(downloadUrl);
     } catch (err) {

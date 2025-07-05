@@ -8,9 +8,12 @@ import { from, Observable } from 'rxjs';
 })
 export class Notes {
 
-  fireStore = inject(Firestore)
+  private notesCollection: CollectionReference;
 
-  private notesCollection: CollectionReference = collection(this.fireStore, 'notes')
+  constructor(private fireStore: Firestore){
+    this.notesCollection = collection(this.fireStore, 'notes');
+  }
+  
 
   addNote(note: Note) {
     return from(addDoc(this.notesCollection, note))

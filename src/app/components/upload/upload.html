@@ -237,10 +237,6 @@
                         <!-- Title -->
                         <h1 class="text-2xl font-bold tracking-wide text-amber-300">{{ title || '' }}</h1>
 
-                        <!-- File Name -->
-                        @if (selectedFileName) {
-                        <h2 class="text-lg text-amber-400 font-bold">{{ selectedFileName }}</h2>
-                        }
 
                         <!-- Meta Info (Simplified) -->
                         <div
@@ -258,27 +254,29 @@
                                 <span class="opacity-90">{{ category || 'N/A' }}</span>
                             </div>
                         </div>
-                        <!-- 
-                        File Preview
-                        <div (click)="toggleFilePreview()" title="Click to preview your uploaded PDF"
-                            class="group w-1/4 px-4 py-3 cursor-pointer flex items-center justify-center gap-3 bg-amber-100 hover:bg-amber-200 border border-amber-300 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 ease-in-out">
-                            <img src="assets/file.png" alt="PDF"
-                                class="w-6 h-6 transition-transform group-hover:scale-110" />
-                            <span class="text-amber-700 font-semibold tracking-wide">Preview File</span>
-                        </div>
-
-                        @if(isShowingFilePreview && filePreviewUrl != null){
- 
-                        <div class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-30">
-                            <div class="bg-white p-4 rounded-md w-[90%] h-[90%] overflow-hidden relative">
-                                <button (click)="toggleFilePreview()"
-                                    class="absolute top-3 right-3 text-black text-xl z-50 cursor-pointer">✖</button>
-                                <pdf-viewer [src]="filePreviewUrl" [render-text]="true" [show-all]="true"
-                                    [original-size]="false" style="height: 100%; display: block;">
-                                </pdf-viewer>
+                        <!-- PDF Preview Block -->
+                        @if(filePreviewUrl) {
+                        <div class="w-3/4 mt-4">
+                            <div
+                                class="bg-[#121212] border border-white/10 rounded-xl px-5 py-4 flex items-center justify-between hover:bg-white/5 transition duration-200 ease-in">
+                                <div class="flex items-center space-x-4">
+                                    <img src="assets/file.png" alt="PDF" class="w-10 h-10" />
+                                    <div class="text-left">
+                                        <p class="text-white font-semibold text-sm truncate max-w-[200px]">
+                                            {{ selectedFileName || 'Uploaded File' }}
+                                        </p>
+                                        <p class="text-gray-400 text-xs">PDF Preview available</p>
+                                    </div>
+                                </div>
+                                <a [href]="filePreviewUrl" target="_blank"
+                                    class="text-sm bg-amber-400 text-black px-4 py-2 rounded-lg font-medium hover:bg-amber-500 transition-all duration-200 ease-in-out shadow-md">
+                                    Open Preview
+                                </a>
                             </div>
                         </div>
-                        } -->
+                        }
+
+
 
 
                     </div>

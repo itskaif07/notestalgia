@@ -1,93 +1,106 @@
 <header class="sticky top-0 z-50 bg-[#1e1e1e]">
 
-<nav class="text-center text-[#111] flex items-center justify-between px-2 lg:px-10 bg-[#1e1e1e] border-b border-amber-400/40">
-  <div class="flex items-center space-x-4 py-3">
-    <img src="assets/logo.png" alt="Logo" class="w-10 sm:w-12">
-    <a href="/" class="flex flex-col items-start text-2xl sm:text-2xl">
-      <h1 class="font-bold text-white">NOTES</h1>
-      <h1 class="font-medium text-white">talgia</h1>
-    </a>
-  </div>
+  <nav
+    class="text-center text-[#111] flex items-center justify-between px-2 lg:px-10 bg-[#1e1e1e] border-b border-amber-400/40">
+    <div class="flex items-center space-x-4 py-3">
+      <img src="assets/logo.png" alt="Logo" class="w-10 sm:w-12">
+      <a href="/" class="flex flex-col items-start text-2xl sm:text-2xl">
+        <h1 class="font-bold text-white">NOTES</h1>
+        <h1 class="font-medium text-white">talgia</h1>
+      </a>
+    </div>
 
-  <div class="flex items-center space-x-20 sm:space-x-6 md:space-x-12 lg:space-x-14 xl:space-x-20 max-sm:hidden">
+    <div class="flex items-center space-x-20 sm:space-x-6 md:space-x-12 lg:space-x-14 xl:space-x-20 max-sm:hidden">
 
-    <a routerLink="/"
-      class="font-semibold hover:text-2xl text-lg text-white hover:underline transition-all ease-in duration-200 hover:text-amber-300 cursor-pointer">Home</a>
-    <a routerLink="/about"
-      class="font-semibold hover:text-2xl text-lg text-white hover:underline transition-all ease-in duration-200 hover:text-amber-300 cursor-pointer">About</a>
+      <a routerLink="/"
+        class="font-semibold hover:text-2xl text-lg text-white hover:underline transition-all ease-in duration-200 hover:text-amber-300 cursor-pointer">Home</a>
+      <a routerLink="/about"
+        class="font-semibold hover:text-2xl text-lg text-white hover:underline transition-all ease-in duration-200 hover:text-amber-300 cursor-pointer">About</a>
 
-    @if (data != null) {
+      @if (data != null) {
       @if (data.emailVerified) {
-        <div class="flex items-center space-x-4">
-          <h1 class="text-white font-medium text-lg">Hi, {{ fullName }}</h1>
-          <h1 class="text-white font-medium text-2xl">|</h1>
-          <button (click)="authService.logOut()"
-            class="bg-[#1e1e1e] border text-white border-amber-300 font-medium cursor-pointer px-6 h-12 text-lg rounded hover:bg-red-400 hover:border-red-400 transition duration-300 hover:scale-105">
-            Log out
-          </button>
-        </div>
-      } @else {
-        <button routerLink="/login"
-          class="bg-amber-300 text-black font-medium cursor-pointer px-10 h-12 text-lg rounded hover:bg-amber-400 transition duration-300 hover:scale-105">
-          Login
+      <div class="flex items-center space-x-4">
+        <h1 class="text-white font-medium text-lg">Hi, {{ fullName }}</h1>
+        <h1 class="text-white font-medium text-2xl">|</h1>
+        <button (click)="logOut()"
+          class="bg-[#1e1e1e] border text-white border-amber-300 font-medium cursor-pointer px-6 h-12 text-lg rounded hover:bg-red-400 hover:border-red-400 transition duration-300 hover:scale-105">
+          Log out
         </button>
-      }
-    } @else {
+      </div>
+      } @else {
       <button routerLink="/login"
         class="bg-amber-300 text-black font-medium cursor-pointer px-10 h-12 text-lg rounded hover:bg-amber-400 transition duration-300 hover:scale-105">
         Login
       </button>
-    }
+      }
+      } @else {
+      <button routerLink="/login"
+        class="bg-amber-300 text-black font-medium cursor-pointer px-10 h-12 text-lg rounded hover:bg-amber-400 transition duration-300 hover:scale-105">
+        Login
+      </button>
+      }
+
+    </div>
+
+    <div class="sm:hidden">
+      <img (click)="openMenu()" src="assets/menu.png" alt="menu.png" class="w-10 sm:w-10 invert grayscale">
+    </div>
+  </nav>
+
+
+
+
+
+
+  <!-- For small screens -->
+
+
+  <div id="menubar"
+    class="w-full min-h-screen py-10 flex flex-col items-center pt-8 z-[999] fixed inset-0 backdrop-blur-sm bg-[#1e1e1e]/90 text-white space-y-6 text-lg font-medium transition-all duration-500"
+    style="transform: translateX(100%); opacity: 0;">
+
+    <!-- Top Bar -->
+    <div class="w-full flex items-center justify-between px-4">
+      @if(data?.emailVerified){
+      <h1 (click)="closeMenu()" class="text-white font-semibold text-xl tracking-wide">Hi, <span class="text-amber-400">{{ fullName }}</span></h1>
+      }
+      @else {
+      <div></div>
+      }
+      <img (click)="closeMenu()" src="assets/close.png" alt="Close"
+        class="w-8 invert grayscale cursor-pointer hover:scale-110 transition" />
+    </div>
+
+    <div class="w-11/12 h-[1px] bg-amber-400 opacity-50 rounded-full my-4"></div>
+
+    <!-- Navigation Links -->
+    <div class="flex flex-col items-center justify-center space-y-10 text-2xl sm:text-3xl ">
+      <h1 (click)="navigateToHome()"
+        class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
+        Home</h1>
+      <h1 (click)="navigateToAbout()"
+        class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
+        About</h1>
+      <h1 (click)="navigateToBrowse()"
+        class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
+        Browse</h1>
+      <h1 (click)="navigateToUpload()"
+        class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
+        Upload</h1>
+      <h1 (click)="navigateToLogin()"
+        class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
+        Log In</h1>
+      <h1 (click)="navigateToSignUp()"
+        class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
+        Sign Up</h1>
+
+      <button (click)="logOut()"
+        class="bg-[#1e1e1e] border text-white border-amber-300 font-medium cursor-pointer px-6 h-12 text-lg rounded hover:bg-red-400 hover:border-red-400 transition duration-300 hover:scale-105">
+        Log out
+      </button>
+    </div>
 
   </div>
 
-  <div class="sm:hidden">
-    <img (click)="openMenu()" src="assets/menu.png" alt="menu.png" class="w-10 sm:w-10 invert grayscale">
-  </div>
-</nav>
-
-
-
-
-
-
-<!-- For small screens -->
-
-
-<div id="menubar"
-  class="w-full min-h-screen py-10 flex flex-col items-center pt-8 z-[999] fixed inset-0 backdrop-blur-sm bg-[#1e1e1e]/90 text-white space-y-6 text-lg font-medium transition-all duration-500"
-  style="transform: translateX(100%); opacity: 0;">
-
-  <!-- Top Bar -->
-  <div class="w-full flex items-center justify-between px-4">
-    @if(data?.emailVerified){
-    <h1 (click)="closeMenu()" class="text-white font-semibold text-xl tracking-wide">{{fullName}}</h1>
-    }
-    @else {
-    <div></div>
-    }
-    <img (click)="closeMenu()" src="assets/close.png" alt="Close" class="w-8 invert grayscale cursor-pointer hover:scale-110 transition" />
-  </div>
-
-  <div class="w-11/12 h-[1px] bg-amber-400 opacity-50 rounded-full my-4"></div>
-
-  <!-- Navigation Links -->
-  <div class="flex flex-col items-center justify-center space-y-10 text-2xl sm:text-3xl mt-10">
-        <h1 (click)="navigateToHome()"
-      class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">Home</h1>
-    <h1 (click)="navigateToAbout()"
-      class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">About</h1>
-    <h1 (click)="navigateToBrowse()"
-      class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">Browse</h1>
-    <h1 (click)="navigateToUpload()"
-      class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">Upload</h1>
-    <h1 (click)="navigateToLogin()"
-      class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">Log In</h1>
-    <h1 (click)="navigateToSignUp()"
-      class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">Sign Up</h1>
-  </div>
-
-</div>
-
-<router-outlet></router-outlet>
+  <router-outlet></router-outlet>
 </header>

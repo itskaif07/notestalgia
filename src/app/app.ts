@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth/auth-service';
-import { Auth } from '@angular/fire/auth';
+import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { filter } from 'rxjs';
@@ -44,9 +44,7 @@ export class App implements OnInit {
 
   }
 
-
-
-
+ 
   getUserDetails() {
     return this.authService.getCurrentUser().subscribe(user => {
       if (user) {
@@ -60,6 +58,16 @@ export class App implements OnInit {
       }
     });
 
+  }
+
+  logOut() {
+    this.authService.logOut().subscribe({
+      next: () => {
+        this.router.navigate(['/'])
+        this.data = null
+      },
+      error: (err) => console.log('error logging out', err)
+    })
   }
 
   openMenu() {
