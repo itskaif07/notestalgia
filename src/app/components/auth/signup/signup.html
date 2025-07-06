@@ -13,7 +13,7 @@
             @if (successMessage && successMessage != '') {
             <p class="text-green-500">{{ successMessage }}</p>
             }
-            <div class="w-full sm:w-4/5 h-full flex flex-col items-center justify-center space-y-10">
+            <div class="w-full sm:w-4/5 h-full flex flex-col items-center justify-center space-y-6">
 
                 <form [formGroup]="signUpForm" class="w-full space-y-4" (ngSubmit)="onSubmit()">
 
@@ -100,6 +100,8 @@
                     <img src="assets/google.png" alt="google" class="w-10">
                     <h1 class="font-semibold text-lg tracking-wide">Google</h1>
                 </div>
+
+            <p class="text-sm">By continuing you agree to our <span routerLink="/legal/privacy" class="font-medium text-amber-500 hover:text-amber-600 cursor-pointer hover:underline">Privacy policy</span>  and <span routerLink="/legal/privacy" class="font-medium text-amber-500 hover:text-amber-600 cursor-pointer hover:underline">Terms of use</span>. </p>
 
             </div>
 

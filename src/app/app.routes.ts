@@ -8,7 +8,10 @@ import { AuthCallBack } from './components/auth/auth-call-back/auth-call-back';
 import { Upload } from './components/upload/upload';
 import { Browse } from './components/browse/browse';
 import { Shop } from './components/shop/shop';
-import { AddReview } from './components/reviews/add-review/add-review';
+import { Privacy } from './components/legal/privacy/privacy';
+import { Terms } from './components/legal/terms/terms';
+import { Disclaimer } from './components/legal/disclaimer/disclaimer';
+
 
 export const routes: Routes = [
 
@@ -60,9 +63,25 @@ export const routes: Routes = [
         component: Shop
     },
 
+
+    // Legal
+
     {
-        path: 'reviews',
-        component: AddReview
+        path: 'legal',
+        children: [
+            {
+                path: 'privacy',
+                component: Privacy
+            },
+            {
+                path: 'terms',
+                component: Terms
+            },
+            {
+                path: 'disclaimer',
+                component: Disclaimer
+            }
+        ]
     }
 
 

@@ -25,7 +25,11 @@ export class App implements OnInit {
   isVerified: boolean = false
   isAuthenticated: boolean = false
 
-  fullName: string = '';
+  fullName: string | null = null;
+  ImageUrl: string | null = null
+
+  dropdownOpen = false;
+
   data: any = null
 
   ngOnInit() {
@@ -50,8 +54,10 @@ export class App implements OnInit {
       if (user) {
         this.data = user;
         this.fullName = user.displayName || '';
+        this.ImageUrl = user.photoURL || ''
         this.isAuthenticated = true;
-        this.isVerified = user.emailVerified; // ✅ add this
+        this.isVerified = user.emailVerified; 
+        console.log(user)
       } else {
         this.isAuthenticated = false;
         this.isVerified = false;
@@ -65,6 +71,7 @@ export class App implements OnInit {
       next: () => {
         this.router.navigate(['/'])
         this.data = null
+        this.closeMenu()
       },
       error: (err) => console.log('error logging out', err)
     })

@@ -1,19 +1,19 @@
-<div class="w-full h-full xl:h-[90vh] flex items-center justify-center px-2 sm:px-10 xl:py-0 bg-[#1e1e1e]">
+<div class="w-full h-full xl:h-[95vh] flex items-center justify-center px-2 sm:px-10 xl:py-0 bg-[#1e1e1e]">
 
     <div class="w-full sm:w-11/12 h-11/12 flex items-center justify-center">
         <!-- Left side form -->
         <div
             class="w-full sm:w-11/12 xl:w-1/2 h-full flex flex-col items-center justify-center bg-gray-100 rounded-2xl max-sm:rounded-none xl:rounded-br-none xl:rounded-tr-none px-10 py-12 space-y-8">
-            
+
             <h1 class="text-3xl font-bold text-center">Welcome Back !</h1>
 
             @if(isDisplayingMessage){
-                @if(successMessage != '') {
-                    <p class="text-green-500 text-lg font-medium">{{successMessage}}</p>
-                }
-                @if(errorMessage != '') {
-                    <p class="text-red-500 text-lg font-medium">{{errorMessage}}</p>
-                }
+            @if(successMessage != '') {
+            <p class="text-green-500 text-lg font-medium">{{successMessage}}</p>
+            }
+            @if(errorMessage != '') {
+            <p class="text-red-500 text-lg font-medium">{{errorMessage}}</p>
+            }
             }
 
             <form [formGroup]="loginForm" class="w-full sm:w-4/5 space-y-6" (ngSubmit)="onSubmit()">
@@ -25,10 +25,10 @@
                             class="block w-full px-3 py-1 rounded-md shadow-sm focus:outline-none sm:text-sm">
                     </div>
                     @if(loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
-                        <p class="text-red-500 text-sm">Please enter a valid email address.</p>
+                    <p class="text-red-500 text-sm">Please enter a valid email address.</p>
                     }
                     @if(loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched) {
-                        <p class="text-red-500 text-sm">Email is required.</p>
+                    <p class="text-red-500 text-sm">Email is required.</p>
                     }
                 </div>
 
@@ -40,10 +40,10 @@
                             class="block w-full px-3 py-1 rounded-md shadow-sm focus:outline-none sm:text-sm">
                     </div>
                     @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-                        <p class="text-red-500 text-sm">Please enter a valid password.</p>
+                    <p class="text-red-500 text-sm">Please enter a valid password.</p>
                     }
                     @if(loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
-                        <p class="text-red-500 text-sm">Password is required.</p>
+                    <p class="text-red-500 text-sm">Password is required.</p>
                     }
                 </div>
 
@@ -73,6 +73,9 @@
                 <img src="assets/google.png" alt="google" class="w-10">
                 <h1 class="font-semibold text-lg tracking-wide">Google</h1>
             </div>
+
+            <p class="text-sm">By continuing you agree to our <span routerLink="/legal/privacy" class="font-medium text-amber-500 hover:text-amber-600 cursor-pointer hover:underline">Privacy policy</span>  and <span routerLink="/legal/privacy" class="font-medium text-amber-500 hover:text-amber-600 cursor-pointer hover:underline">Terms of use</span>. </p>
+
         </div>
 
         <!-- Right side image -->

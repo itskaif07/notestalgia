@@ -19,14 +19,34 @@
 
       @if (data != null) {
       @if (data.emailVerified) {
-      <div class="flex items-center space-x-4">
-        <h1 class="text-white font-medium text-lg">Hi, {{ fullName }}</h1>
-        <h1 class="text-white font-medium text-2xl">|</h1>
-        <button (click)="logOut()"
-          class="bg-[#1e1e1e] border text-white border-amber-300 font-medium cursor-pointer px-6 h-12 text-lg rounded hover:bg-red-400 hover:border-red-400 transition duration-300 hover:scale-105">
-          Log out
-        </button>
+      <!-- Profile Dropdown Wrapper -->
+      <div class="relative" (mouseenter)="dropdownOpen = true" (mouseleave)="dropdownOpen = false">
+
+        <!-- Trigger -->
+        <div class="flex items-center space-x-2 cursor-pointer">
+          <img [src]="ImageUrl || 'assets/user.png'" alt="Profile"
+            class="w-10 h-10 rounded-full border border-amber-300" />
+          <span class="text-white font-medium">{{ fullName || '' }}</span>
+        </div>
+
+        <!-- Dropdown Menu using @if -->
+        @if (dropdownOpen) {
+        <div
+          class="absolute right-0 mt-2 w-56 bg-[#1e1e1e] border border-amber-400/40 rounded-lg shadow-lg py-2 flex flex-col z-50 transition-all duration-300 ease-in-out">
+          <a routerLink="/account"
+            class="px-4 py-2 hover:bg-amber-300 hover:text-black transition text-white text-sm">My Account</a>
+          <a routerLink="/upload"
+            class="px-4 py-2 hover:bg-amber-300 hover:text-black transition text-white text-sm">Upload Notes</a>
+          <button (click)="logOut()"
+            class="px-4 py-2 text-center cursor-pointer hover:bg-red-400 hover:text-white transition text-white text-sm">
+            Log Out
+          </button>
+        </div>
+        }
       </div>
+
+
+
       } @else {
       <button routerLink="/login"
         class="bg-amber-300 text-black font-medium cursor-pointer px-10 h-12 text-lg rounded hover:bg-amber-400 transition duration-300 hover:scale-105">
@@ -47,60 +67,92 @@
     </div>
   </nav>
 
+</header>
 
 
+<router-outlet></router-outlet>
+
+<!-- For small screens -->
 
 
+<div id="menubar"
+  class="w-full min-h-screen py-10 flex flex-col items-center pt-8 z-[999] fixed inset-0 backdrop-blur-sm bg-[#1e1e1e]/90 text-white space-y-6 text-lg font-medium transition-all duration-500"
+  style="transform: translateX(100%); opacity: 0;">
 
-  <!-- For small screens -->
-
-
-  <div id="menubar"
-    class="w-full min-h-screen py-10 flex flex-col items-center pt-8 z-[999] fixed inset-0 backdrop-blur-sm bg-[#1e1e1e]/90 text-white space-y-6 text-lg font-medium transition-all duration-500"
-    style="transform: translateX(100%); opacity: 0;">
-
-    <!-- Top Bar -->
-    <div class="w-full flex items-center justify-between px-4">
-      @if(data?.emailVerified){
-      <h1 (click)="closeMenu()" class="text-white font-semibold text-xl tracking-wide">Hi, <span class="text-amber-400">{{ fullName }}</span></h1>
-      }
-      @else {
-      <div></div>
-      }
-      <img (click)="closeMenu()" src="assets/close.png" alt="Close"
-        class="w-8 invert grayscale cursor-pointer hover:scale-110 transition" />
+  <!-- Top Bar -->
+  <div class="w-full flex items-center justify-between px-4">
+    @if(data?.emailVerified){
+    <div class="flex items-center space-x-2 cursor-pointer">
+      <img [src]="ImageUrl || 'assets/user.png'" alt="Profile" class="w-10 h-10 rounded-full border border-amber-300" />
+      <span class="text-white font-medium">{{ fullName || '' }}</span>
     </div>
-
-    <div class="w-11/12 h-[1px] bg-amber-400 opacity-50 rounded-full my-4"></div>
-
-    <!-- Navigation Links -->
-    <div class="flex flex-col items-center justify-center space-y-10 text-2xl sm:text-3xl ">
-      <h1 (click)="navigateToHome()"
-        class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
-        Home</h1>
-      <h1 (click)="navigateToAbout()"
-        class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
-        About</h1>
-      <h1 (click)="navigateToBrowse()"
-        class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
-        Browse</h1>
-      <h1 (click)="navigateToUpload()"
-        class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
-        Upload</h1>
-      <h1 (click)="navigateToLogin()"
-        class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
-        Log In</h1>
-      <h1 (click)="navigateToSignUp()"
-        class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
-        Sign Up</h1>
-
-      <button (click)="logOut()"
-        class="bg-[#1e1e1e] border text-white border-amber-300 font-medium cursor-pointer px-6 h-12 text-lg rounded hover:bg-red-400 hover:border-red-400 transition duration-300 hover:scale-105">
-        Log out
-      </button>
-    </div>
-
+    }
+    @else {
+    <div></div>
+    }
+    <img (click)="closeMenu()" src="assets/close.png" alt="Close"
+      class="w-8 invert grayscale cursor-pointer hover:scale-110 transition" />
   </div>
 
-  <router-outlet></router-outlet>
-</header>
+  <div class="w-11/12 h-[1px] bg-amber-400 opacity-50 rounded-full my-4"></div>
+
+  <!-- Navigation Links -->
+  <div class="flex flex-col items-center justify-center space-y-10 text-2xl sm:text-3xl pt-6">
+    <h1 (click)="navigateToHome()"
+      class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
+      Home</h1>
+    <h1 (click)="navigateToAbout()"
+      class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
+      About</h1>
+    <h1 (click)="navigateToBrowse()"
+      class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
+      Browse</h1>
+    <h1 (click)="navigateToUpload()"
+      class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
+      Upload</h1>
+    <h1 (click)="navigateToLogin()"
+      class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
+      Log In</h1>
+    <h1 (click)="navigateToSignUp()"
+      class="hover:text-amber-300 transition duration-300 hover:tracking-wide hover:scale-105 cursor-pointer active:text-amber-300">
+      Sign Up</h1>
+    @if (data != null) {
+    @if (data.emailVerified) {
+    <button (click)="logOut()"
+      class="bg-[#1e1e1e] border text-white border-amber-300 font-medium cursor-pointer px-6 h-12 text-lg rounded hover:bg-red-400 hover:border-red-400 transition duration-300 hover:scale-105">
+      Log out
+    </button>
+    }
+    }
+  </div>
+</div>
+
+<footer
+  class="w-full bg-[#1e1e1e] text-white py-6 px-4 md:px-10 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-0 z-40">
+
+  <!-- Left: Policy Links -->
+  <div class="flex flex-wrap items-center justify-center md:justify-start gap-x-4 text-sm md:text-base text-gray-300">
+    <a routerLink="legal/privacy" class="hover:text-amber-300 transition">Privacy Policy</a>
+    <span>|</span>
+    <a routerLink="legal/terms" class="hover:text-amber-300 transition">Terms & Conditions</a>
+    <span>|</span>
+    <a routerLink="legal/disclaimer" class="hover:text-amber-300 transition">Disclaimer</a>
+    <span>|</span>
+    <a routerLink="legal/grievance" class="hover:text-amber-300 transition">Grievance Policy</a>
+  </div>
+
+  <!-- Center: Copyright -->
+  <div class="text-center text-sm md:text-base text-gray-400 font-medium">
+    &copy; 2025 Notestalgia. All rights reserved.
+  </div>
+
+  <!-- Right: Socials or Placeholder -->
+  <div class="flex items-center justify-center md:justify-end space-x-4 text-gray-300">
+    <!-- You can add icons here later -->
+    <a href="#"><img src="assets/insta.png" alt="Instagram" class="w-5 h-5" /></a>
+    <a href="#"><img src="assets/fb.png" alt="Twitter" class="w-5 h-5" /></a>
+    <a href="#"><img src="assets/youtube.png" alt="Twitter" class="w-5 h-5" /></a>
+    <span class="italic text-sm opacity-60">Crafted with nostalgia ✨</span>
+  </div>
+
+</footer>

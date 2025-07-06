@@ -1,12 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Notes } from '../../services/notes/notes';
-import { SafeUrlPipe } from '../../pipes/safe-url-pipe';
 import { AddReview } from "../reviews/add-review/add-review";
 import { Reviews } from '../../services/reviews/reviews';
 import { DatePipe } from '@angular/common';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
-import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-shop',
@@ -18,6 +16,7 @@ export class Shop implements OnInit {
 
   reviewService = inject(Reviews)
   noteService = inject(Notes)
+
   auth = inject(Auth)
   activatedRoute = inject(ActivatedRoute)
 
@@ -37,8 +36,8 @@ export class Shop implements OnInit {
     onAuthStateChanged(this.auth, (user) => {
       if (user) {
         this.currentUser = user;
-        this.getDocumentId(); // Call only after user is ready
       }
+      this.getDocumentId(); // Call only after user is ready
     });
   }
 
@@ -81,6 +80,7 @@ export class Shop implements OnInit {
     }
   }
 
+
   checkUserReview() {
     if (this.currentUser && this.docId) {
       this.reviewService.checkIfUserReviewed(this.docId, this.currentUser.uid).subscribe({
@@ -100,6 +100,7 @@ export class Shop implements OnInit {
       })
     }
   }
+
 
   getReviewsCount(): void {
     if (this.docId) {
@@ -122,9 +123,6 @@ export class Shop implements OnInit {
     }
   }
 
-  editReview() {
-    this.isShowingReviewBox = true;
-  }
 
   deleteReview(reviewId: string) {
     if (this.docId && this.reviewsList) {
@@ -137,7 +135,9 @@ export class Shop implements OnInit {
         error: (err) => console.log('Error deleting review:', err)
       })
     }
-
   }
+
+
+
 
 }
