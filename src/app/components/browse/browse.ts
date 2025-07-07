@@ -15,6 +15,7 @@ export class Browse implements OnInit {
   categoriesList = NoteCategories
   allNotesList: any[] | null = null
   notesList: any[] | null = null
+  isLoading: boolean = true
 
   activeCategory: any = null
 
@@ -36,26 +37,33 @@ export class Browse implements OnInit {
         this.allNotesList = data
         this.notesList = data
         this.sortByNewestFirst()
+        this.isLoading = false
       },
-      error: (err) => console.log(err)
+      error: (err) => {
+        console.log(err)
+        this.isLoading = false
+      }
     })
   }
 
   // Filter Methods
 
   filterByCategory(category: string) {
+    this.isLoading = true
     if (this.notesList && this.allNotesList) {
       const selected = category.trim().toLowerCase();
       this.activeCategory = category
       this.notesList = this.allNotesList.filter(note =>
         note.category?.trim().toLowerCase() === selected
       );
+      this.isLoading = false
     }
   }
 
   //Search Method
 
   searchNotes(event: any) {
+    this.isLoading = true
     const searchTerm = (event.target as HTMLInputElement).value.trim().toLowerCase();
 
     if (this.allNotesList && this.notesList) {
@@ -65,6 +73,7 @@ export class Browse implements OnInit {
           note.subject?.trim().toLowerCase().includes(searchTerm) ||
           note.level?.trim().toLowerCase().includes(searchTerm);
       })
+      this.isLoading = false
     }
   }
 
@@ -89,6 +98,7 @@ export class Browse implements OnInit {
   }
 
   sortByOldestFirst() {
+    this.isLoading = true
     if (this.notesList && this.allNotesList) {
       this.activeCategory = null;
 
@@ -97,36 +107,43 @@ export class Browse implements OnInit {
         const dateB = b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0;
         return dateA - dateB;
       });
+      this.isLoading = false
     }
   }
-
+  
   sortByNewestFirst() {
+    this.isLoading = true
     if ((this.notesList && this.allNotesList)) {
       this.notesList = [...this.allNotesList].sort((a, b) => {
         const dateA = a.createdAt?.seconds ? a.createdAt.seconds * 1000 : 0;
         const dateB = b.createdAt?.seconds ? b.createdAt.seconds * 1000 : 0;
         return dateB - dateA;
       })
+      this.isLoading = false
     }
   }
 
   sortByTitleAsc() {
+    this.isLoading = true
     if (this.notesList && this.allNotesList) {
       this.notesList = [...this.allNotesList].sort((a, b) => {
         const titleA = a.title?.toLowerCase() || '';
         const titleB = b.title?.toLowerCase() || '';
         return titleA.localeCompare(titleB);
       })
+    this.isLoading = false
     }
   }
 
   sortByTitleDesc() {
+    this.isLoading = true
     if (this.notesList && this.allNotesList) {
       this.notesList = [...this.allNotesList].sort((a, b) => {
         const titleA = a.title?.toLowerCase() || '';
         const titleB = b.title?.toLowerCase() || '';
         return titleB.localeCompare(titleA);
       })
+    this.isLoading = false
     }
   }
 

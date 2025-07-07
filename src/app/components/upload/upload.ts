@@ -39,12 +39,14 @@ export class Upload implements OnInit {
   subject: string | null = null
   description: string | null = null
   selectedFile: File | null = null;
-  isShowingFilePreview: boolean = false
 
-  currentStep: number = 1;
+  isShowingFilePreview: boolean = false
   isDragging = false;
   isDropped = false;
+  isLoading = false
 
+  
+  currentStep: number = 1;
   errorMessageForFile: string | null = null;
 
 
@@ -100,6 +102,7 @@ export class Upload implements OnInit {
   }
 
   async handleFileUpload(file: File) {
+    this.isLoading = true
     this.selectedFile = file;
     this.selectedFileName = file.name;
     this.filePreviewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file));
@@ -110,12 +113,11 @@ export class Upload implements OnInit {
     try {
       await uploadBytes(fileRef, file);
       const downloadUrl = await getDownloadURL(fileRef);
-      
-
       this.uploadForm.get('fileUrl')?.setValue(downloadUrl);
+      this.isLoading = false
     } catch (err) {
       console.error('Upload failed:', err);
-
+      this.isLoading = false
     }
   }
 
@@ -159,6 +161,7 @@ export class Upload implements OnInit {
   //Thumbnail Upload
 
   async selectThumbnail(event: Event) {
+    this.isLoading = true
     const input = event.target as HTMLInputElement;
 
     if (input.files && input.files.length > 0) {
@@ -171,8 +174,10 @@ export class Upload implements OnInit {
         const thumbnailUrl = await getDownloadURL(thumbRef);
         this.thumbnailPreviewUrl = thumbnailUrl
         this.uploadForm.get('thumbnail')?.setValue(thumbnailUrl);
+        this.isLoading = false
       } catch (err) {
         console.error('Upload failed:', err);
+        this.isLoading = false
       }
     }
   }
@@ -210,7 +215,6 @@ export class Upload implements OnInit {
       error: (error) => console.log(error)
     })
   }
-
 
 
   //Animation

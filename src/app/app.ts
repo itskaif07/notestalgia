@@ -24,6 +24,7 @@ export class App implements OnInit {
 
   isVerified: boolean = false
   isAuthenticated: boolean = false
+  isLoading = true
 
   fullName: string | null = null;
   ImageUrl: string | null = null
@@ -55,12 +56,13 @@ export class App implements OnInit {
         this.data = user;
         this.fullName = user.displayName || '';
         this.ImageUrl = user.photoURL || ''
-        this.isAuthenticated = true;
         this.isVerified = user.emailVerified; 
+        this.isLoading = false
         console.log(user)
       } else {
         this.isAuthenticated = false;
         this.isVerified = false;
+        this.isLoading = false
       }
     });
 
