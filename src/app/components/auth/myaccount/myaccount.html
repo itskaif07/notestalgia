@@ -1,0 +1,63 @@
+@if(isLoading){
+<div class="w-full h-[80vh] flex items-center justify-center">
+  <div class="flex flex-row gap-2">
+    <div class="w-4 h-4 rounded-full bg-amber-400 animate-bounce"></div>
+    <div class="w-4 h-4 rounded-full bg-amber-400 animate-bounce [animation-delay:-.3s]"></div>
+    <div class="w-4 h-4 rounded-full bg-amber-400 animate-bounce [animation-delay:-.5s]"></div>
+  </div>
+</div>
+}
+@else {
+
+<div class="min-h-screen bg-[#1e1e1e] text-white flex flex-col lg:flex-row px-4 lg:px-16 py-10 gap-10">
+
+  <!-- Left: Profile Image / Banner -->
+  <div class="hidden lg:flex w-full lg:w-[30%] h-[80vh] rounded-2xl bg-cover bg-center shadow-lg"
+    style="background-image: url('https://images.unsplash.com/photo-1576506542790-51244b486a6b');">
+  </div>
+
+  <!-- Right: Content -->
+  <div class="w-full lg:w-[70%] space-y-10 max-w-5xl mx-auto">
+
+    <!-- Profile -->
+    <div class="bg-[#252525] p-6 rounded-2xl shadow-md space-y-5">
+      <div class="flex items-center space-x-5">
+        <img [src]="currentUser?.photoURL || 'assets/user.png'" alt="Profile" (error)="onImageError($event)"
+          class="w-16 h-16 rounded-full border-2 border-amber-400 shadow object-cover" />
+        <div>
+          <h2 class="text-2xl font-bold">{{ currentUser?.displayName || 'Unnamed User' }}</h2>
+          <p class="text-sm text-gray-400 capitalize">{{ isCreator ? 'Creator' : 'User' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal Information -->
+    <div class="bg-[#252525] p-6 rounded-2xl shadow-md space-y-6">
+      <h3 class="text-xl font-bold border-b border-amber-400 pb-2">Personal Info</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm sm:text-base">
+        <p><span class="text-gray-400">Name:</span> {{ currentUser?.displayName || 'N/A' }}</p>
+        <p><span class="text-gray-400">Email:</span> {{ currentUser?.email || 'N/A' }}</p>
+        <p><span class="text-gray-400">Role:</span> {{ isCreator ? 'Creator' : 'User' }}</p>
+        <p><span class="text-gray-400">Joined On:</span> {{ accountCreationDate | date }}</p>
+      </div>
+    </div>
+
+    <!-- Creator Panel -->
+    @if (isCreator) {
+    <div class="bg-[#252525] p-6 rounded-2xl shadow-md space-y-6">
+      <h3 class="text-xl font-bold border-b border-amber-400 pb-2">Creator Panel</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm sm:text-base">
+        <p><span class="text-gray-400">Uploaded Notes:</span> {{ userNotesCount || 0 }}</p>
+        <!-- <p><span class="text-gray-400">Earnings:</span> ₹{{ totalEarnings || '0.00' }}</p>
+        <p><span class="text-gray-400">Bank Account:</span> {{ bankDetails?.name || 'Not linked' }}</p>
+        <p><span class="text-gray-400">Bank:</span> {{ bankDetails?.bank || '-' }}</p>
+        <p><span class="text-gray-400">IFSC:</span> {{ bankDetails?.ifsc || '-' }}</p>
+        <p><span class="text-gray-400">Account Number:</span> {{ bankDetails?.number ? '********' + bankDetails?.number.slice(-4) : '-' }}</p> -->
+      </div>
+    </div>
+    }
+
+  </div>
+
+</div>
+}

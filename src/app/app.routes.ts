@@ -11,6 +11,9 @@ import { Shop } from './components/shop/shop';
 import { Privacy } from './components/legal/privacy/privacy';
 import { Terms } from './components/legal/terms/terms';
 import { Disclaimer } from './components/legal/disclaimer/disclaimer';
+import { NotFound } from './components/error/not-found/not-found';
+import { Myaccount } from './components/auth/myaccount/myaccount';
+import { CartPage } from './components/cart/cart-page/cart-page';
 
 
 export const routes: Routes = [
@@ -42,6 +45,10 @@ export const routes: Routes = [
     {
         path: 'password-reset',
         component: PasswordReset
+    },
+    {
+        path: 'my-account',
+        component: Myaccount
     },
 
     //Upload
@@ -82,6 +89,21 @@ export const routes: Routes = [
                 component: Disclaimer
             }
         ]
+    },
+
+    // Cart
+
+    {
+        path: 'wishlist',
+        component: CartPage
+    },
+
+
+    // Others
+
+    {
+        path: '**',
+        component: NotFound
     }
 
 

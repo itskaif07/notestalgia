@@ -1,14 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Notes } from '../../services/notes/notes';
 import { AddReview } from "../reviews/add-review/add-review";
 import { Reviews } from '../../services/reviews/reviews';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
+import { Cart } from '../../services/cart/cart';
 
 @Component({
   selector: 'app-shop',
-  imports: [AddReview, DatePipe],
+  imports: [AddReview, DatePipe, CommonModule, RouterLink],
   templateUrl: './shop.html',
   styleUrl: './shop.css'
 })
@@ -16,8 +17,10 @@ export class Shop implements OnInit {
 
   reviewService = inject(Reviews)
   noteService = inject(Notes)
+  cartService = inject(Cart)
 
   auth = inject(Auth)
+  router = inject(Router)
   activatedRoute = inject(ActivatedRoute)
 
   noteData: any = null
@@ -30,6 +33,7 @@ export class Shop implements OnInit {
 
   isShowingReviewBox: boolean = false
   userReviewed: boolean = false
+  isLoading = true
 
 
   ngOnInit(): void {
@@ -49,6 +53,7 @@ export class Shop implements OnInit {
         this.getNoteDetails()
         this.getReviewsList()
         this.checkUserReview()
+        this.isLoading = false
       }
     })
   }
@@ -56,18 +61,16 @@ export class Shop implements OnInit {
   getNoteDetails() {
     if (this.docId != null) {
       this.noteService.getNote(this.docId).subscribe({
-        next: (docSnap) => {
-          if (docSnap.exists()) {
-            this.noteData = docSnap.data();
-            console.log('Note data:', this.noteData);
-          } else {
-            console.log('No such document exists!');
-          }
+        next:(note) => {
+          this.noteData = note 
         },
-        error: (err) => console.error('Error fetching note:', err)
-      });
+        error:(e) => console.log('error while finding note details')
+      })
     }
   }
+
+
+  // Reviews & Ratings
 
   getReviewsList() {
     if (this.docId != null) {
@@ -124,6 +127,7 @@ export class Shop implements OnInit {
   }
 
 
+
   deleteReview(reviewId: string) {
     if (this.docId && this.reviewsList) {
       this.reviewService.deleteReview(reviewId, this.docId).subscribe({
@@ -138,6 +142,18 @@ export class Shop implements OnInit {
   }
 
 
+  // Wishlist 
 
+  addtoWishlist() {
+    if (this.currentUser && this.noteData) {
+      this.cartService.addToWishlist(this.currentUser.uid, this.noteData).subscribe({
+        next: () => {
+          console.log('cart Added Successfully')
+          this.router.navigate(['/wishlist'])
+        },
+        error: (e) => console.log('There have been an error while adding cart')
+      })
+    }
+  }
 
 }

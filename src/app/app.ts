@@ -5,13 +5,13 @@ import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { filter } from 'rxjs';
-import { JsonPipe } from '@angular/common';
+import { CommonModule, JsonPipe } from '@angular/common';
 
 gsap.registerPlugin(ScrollTrigger)
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterOutlet, RouterLink, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -46,7 +46,14 @@ export class App implements OnInit {
         window.scrollTo({ top: 0 });
       }, 50);
     });
+  }
 
+  isActiveRoute(path:string){
+    return this.router.url == path
+  }
+
+  onImageError(event: Event){
+    (event.target as HTMLImageElement).src = 'assets/user.png'
   }
 
  
@@ -58,7 +65,6 @@ export class App implements OnInit {
         this.ImageUrl = user.photoURL || ''
         this.isVerified = user.emailVerified; 
         this.isLoading = false
-        console.log(user)
       } else {
         this.isAuthenticated = false;
         this.isVerified = false;
@@ -127,6 +133,12 @@ export class App implements OnInit {
     this.router.navigate(['/signup'])
     this.closeMenu()
   }
+
+  navigateToAccount() {
+    this.router.navigate(['/my-account'])
+    this.closeMenu()
+  }
+
 
 
 }
