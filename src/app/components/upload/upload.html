@@ -190,9 +190,9 @@
                     </div>
                     <div class="w-full xl:w-1/2 h-[40vh] mb-10 xl:mb-0">
                         @if(isLoading){
-                            <div class="flex items-center justify-center h-full w-full"> 
-                                <div class="loader"></div>
-                            </div>
+                        <div class="flex items-center justify-center h-full w-full">
+                            <div class="loader"></div>
+                        </div>
                         }
                         @else{
                         @if(thumbnailPreviewUrl){
@@ -224,6 +224,43 @@
                         class="bg-transparent border placeholder:text-sm  rounded-lg px-4 py-2 focus:outline-none text-white placeholder-white placeholder-opacity-60"></textarea>
                 </div>
 
+                <div class="w-full">
+                    <h2 class="text-white font-semibold text-lg mb-1">Add Preview Images <span
+                            class="text-sm text-gray-400">(optional, max 5)</span></h2>
+
+                    <p class="text-sm text-gray-400 mb-4">
+                        These are <span class="text-amber-300">images or screenshots</span> from your handwritten notes.
+                        Preview images help buyers see what your notes look like before they purchase — adding them can
+                        improve trust and downloads.
+                    </p>
+
+                    <div class="flex flex-wrap gap-4">
+                        @for (image of PreviewImagesForDisplay; let i = $index; track $index) {
+                        <div
+                            class="relative w-32 h-32 border border-amber-400 rounded-lg overflow-hidden bg-[#252525] shadow-md">
+                            <img [src]="image" alt="preview" class="w-full h-full object-cover" />
+                            <button type="button" (click)="removePreview(i)"
+                                class="absolute top-1 right-1 bg-black/70 text-white w-6 h-6 flex items-center justify-center rounded-full text-sm hover:bg-red-600 transition">
+                                ×
+                            </button>
+                        </div>
+                        }
+
+                        @if (PreviewImagesForDisplay.length < 5) { <label
+                            class="w-32 h-32 border-2 border-dashed border-amber-400 rounded-lg flex items-center justify-center cursor-pointer hover:border-amber-500 transition">
+                            <input type="file" class="hidden" accept="image/*" (change)="handleImageSelect($event)" />
+                            <span class="text-2xl text-white font-semibold">+</span>
+                            </label>
+                            }
+                    </div>
+
+                    @if (imageUploadError) {
+                    <p class="text-sm text-red-500 mt-1">{{ imageUploadError }}</p>
+                    }
+                </div>
+
+
+
                 <div
                     class="w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between space-y-6 sm:space-y-0">
                     <button id="back2" type="button" (click)="phase2BackAnimation()"
@@ -253,15 +290,18 @@
                         <!-- Meta Info (Simplified) -->
                         <div
                             class="space-y-1 text-white flex flex-col items-center xl:items-start justify-center w-full">
-                            <div class="flex items-center justify-center xl:justify-start gap-2 w-full text-sm lg:text-base">
+                            <div
+                                class="flex items-center justify-center xl:justify-start gap-2 w-full text-sm lg:text-base">
                                 <span class="text-gray-400 font-medium">📘 Subject:</span>
                                 <span class="opacity-90">{{ subject || 'N/A' }}</span>
                             </div>
-                            <div class="flex items-center justify-center xl:justify-start gap-2 w-full text-sm lg:text-base">
+                            <div
+                                class="flex items-center justify-center xl:justify-start gap-2 w-full text-sm lg:text-base">
                                 <span class="text-gray-400 font-medium">🧠 Level:</span>
                                 <span class="opacity-90">{{ level || 'N/A' }}</span>
                             </div>
-                            <div class="flex items-center justify-center xl:justify-start gap-2 w-full text-sm lg:text-base">
+                            <div
+                                class="flex items-center justify-center xl:justify-start gap-2 w-full text-sm lg:text-base">
                                 <span class="text-gray-400 font-medium">📂 Category:</span>
                                 <span class="opacity-90">{{ category || 'N/A' }}</span>
                             </div>

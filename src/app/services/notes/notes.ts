@@ -34,7 +34,7 @@ export class Notes {
   return from(getDoc(docReference)).pipe(
     map((docSnap) => {
       if (docSnap.exists()) {
-        return { id: docSnap.id, ...docSnap.data() }; // ✅ add ID here
+        return { id: docSnap.id, ...docSnap.data() as Note }; // ✅ add ID here
       } else {
         throw new Error('Note does not exist');
       }

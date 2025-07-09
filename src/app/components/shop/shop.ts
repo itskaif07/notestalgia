@@ -26,6 +26,7 @@ export class Shop implements OnInit {
   noteData: any = null
   docId: string | null = null
   reviewsList: any[] | null = null
+  PreviewImagesForDisplay: string[] = []
   currentUser: User | null = null
   reviewCount: number | null = null
   averageRatings: number | null = null
@@ -34,6 +35,10 @@ export class Shop implements OnInit {
   isShowingReviewBox: boolean = false
   userReviewed: boolean = false
   isLoading = true
+  isShowingPreview = false
+
+  currentSlide = 0;
+
 
 
   ngOnInit(): void {
@@ -62,7 +67,9 @@ export class Shop implements OnInit {
     if (this.docId != null) {
       this.noteService.getNote(this.docId).subscribe({
         next:(note) => {
-          this.noteData = note 
+          this.noteData = note
+          this.PreviewImagesForDisplay = this.noteData.previewImages
+          console.log(note)
         },
         error:(e) => console.log('error while finding note details')
       })
@@ -155,5 +162,21 @@ export class Shop implements OnInit {
       })
     }
   }
+
+  //preview
+
+  
+nextSlide() {
+  if (this.PreviewImagesForDisplay.length > 0) {
+    this.currentSlide = (this.currentSlide + 1) % this.PreviewImagesForDisplay.length;
+  }
+}
+
+prevSlide() {
+  if (this.PreviewImagesForDisplay.length > 0) {
+    this.currentSlide =
+      (this.currentSlide - 1 + this.PreviewImagesForDisplay.length) % this.PreviewImagesForDisplay.length;
+  }
+}
 
 }

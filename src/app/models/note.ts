@@ -1,13 +1,14 @@
 import { Timestamp } from "firebase/firestore";
 
-export interface Note{
+export interface Note {
     id?: string,
     title: string,
-    description?:string,
-    category:string,
-    subject:string,
+    description?: string,
+    category: string,
+    subject: string,
     price: 30,
-    thumbnail:string,
+    thumbnail: string,
+    previewImages?: string[],
     fileUrl: string,
     userId: string,
     createdAt: Timestamp | Date | string

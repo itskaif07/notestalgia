@@ -45,7 +45,7 @@ export class Upload implements OnInit {
   isDropped = false;
   isLoading = false
 
-  
+
   currentStep: number = 1;
   errorMessageForFile: string | null = null;
 
@@ -83,6 +83,7 @@ export class Upload implements OnInit {
       level: ['', [Validators.required]],
       subject: ['', [Validators.required]],
       thumbnail: [''],
+      previewImages: [[]],
       fileUrl: ['', [Validators.required]],
       userId: [this.uid, [Validators.required]],
       createdAt: [new Date()],
@@ -102,6 +103,7 @@ export class Upload implements OnInit {
   }
 
   async handleFileUpload(file: File) {
+
     this.isLoading = true
     this.selectedFile = file;
     this.selectedFileName = file.name;
@@ -144,7 +146,7 @@ export class Upload implements OnInit {
       return;
     }
 
-    if(event.dataTransfer && event.dataTransfer.files[0].type !== 'application/pdf') {
+    if (event.dataTransfer && event.dataTransfer.files[0].type !== 'application/pdf') {
       this.errorMessageForFile = 'Please upload a valid PDF file.';
       return;
     }
@@ -182,6 +184,48 @@ export class Upload implements OnInit {
     }
   }
 
+  // preview images
+
+  PreviewImagesForDisplay: string[] = []
+  previewImagesFiles: string[] = []
+
+  imageUploadError = '';
+
+  async handleImageSelect(event: Event) {
+
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files?.length > 0) {
+      const file = input.files[0]
+      const storage = getStorage()
+      const uniqueName = `${Date.now()}_${file.name}`
+      const ImagesRef = ref(storage, `Images/${uniqueName}`)
+
+      const previewFiles = URL.createObjectURL(file)
+      this.PreviewImagesForDisplay.push(previewFiles)
+
+      try {
+        await uploadBytes(ImagesRef, file)
+        const downloadUrl = await getDownloadURL(ImagesRef)
+        this.previewImagesFiles.push(downloadUrl)
+        this.uploadForm.get('previewImages')?.setValue(this.previewImagesFiles)
+        this.imageUploadError = '';
+      }
+      catch (err) {
+        console.error('Image upload failed', err);
+        this.imageUploadError = 'Failed to upload image.';
+      }
+    }
+
+  }
+
+removePreview(index: number) {
+  this.PreviewImagesForDisplay.splice(index, 1);
+  this.previewImagesFiles.splice(index, 1);
+  this.uploadForm.get('previewImages')?.setValue(this.previewImagesFiles);
+}
+
+
 
   //For Data Preview
 
@@ -202,6 +246,12 @@ export class Upload implements OnInit {
   // Submit
 
   formSubmit() {
+
+    
+    if(!this.title || !this.category || !this.level || !this.subject){
+      console.log('required fields are empty')
+      return
+    }
 
     const note: Note = {
       ...this.uploadForm.getRawValue(),
