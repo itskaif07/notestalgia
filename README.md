@@ -44,8 +44,8 @@ Whether you're a student looking to earn from your notes or someone seeking reli
 
 | Category         | Tools / Libraries                                     |
 |------------------|-------------------------------------------------------|
-| **Frontend**      | [Angular](https://angular.io/) (Standalone Components) |
-| **Styling**       | [Tailwind CSS](https://tailwindcss.com/), Custom Theme |
+| **Frontend**      | [Angular](https://angular.io/) |
+| **Styling**       | [Tailwind CSS](https://tailwindcss.com/), |
 | **Animations**    | [GSAP](https://gsap.com/)                             |
 | **Backend/Auth**  | [Firebase Auth](https://firebase.google.com/products/auth) |
 | **Database**      | [Firestore (NoSQL)](https://firebase.google.com/products/firestore) |
