@@ -6,7 +6,7 @@ export interface Note {
     description?: string,
     category: string,
     subject: string,
-    price: 30,
+    price: 50,
     thumbnail: string,
     previewImages?: string[],
     fileUrl: string,

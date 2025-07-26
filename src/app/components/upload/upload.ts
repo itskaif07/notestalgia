@@ -34,6 +34,7 @@ export class Upload implements OnInit {
   filePreviewUrl: SafeResourceUrl | null = null
   thumbnailPreviewUrl: string | null = null
   title: string | null = null
+  pages: number | null = null
   category: string | null = null
   level: string | null = null
   subject: string | null = null
@@ -76,9 +77,10 @@ export class Upload implements OnInit {
 
   setFormState() {
     this.uploadForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(3)]],
+      title: ['', [Validators.required, Validators.min(1)]],
       description: [''],
-      price: 30,
+      price: 50,
+      pages: [1, [Validators.minLength(1), Validators.required]],
       category: ['', [Validators.required]],
       level: ['', [Validators.required]],
       subject: ['', [Validators.required]],
@@ -235,6 +237,7 @@ removePreview(index: number) {
     this.category = this.uploadForm.get('category')?.value
     this.level = this.uploadForm.get('level')?.value
     this.description = this.uploadForm.get('description')?.value
+    this.pages = this.uploadForm.get('pages')?.value
   }
 
   // File Preview
@@ -256,7 +259,7 @@ removePreview(index: number) {
     const note: Note = {
       ...this.uploadForm.getRawValue(),
       createdAt: new Date(),
-      price: 30,
+      price: 50,
       userId: this.uid
     }
 

@@ -76,7 +76,7 @@
     <!-- Price -->
     <div class="w-full flex justify-between items-center px-5 py-4 border border-white/20 bg-[#252525] rounded-xl">
       <h2 class="text-lg font-semibold">Price</h2>
-      <span class="text-xl font-bold text-amber-400">₹{{ noteData.price || 30 }}</span>
+      <span class="text-xl font-bold text-amber-400">₹{{ noteData.price }}</span>
     </div>
 
     <!-- About -->
@@ -87,6 +87,7 @@
         <p><span class="text-white font-semibold">Category:</span> {{ noteData.category }}</p>
         <p><span class="text-white font-semibold">Level:</span> {{ noteData.level }}</p>
         <p><span class="text-white font-semibold">Subject:</span> {{ noteData.subject }}</p>
+        <p><span class="text-white font-semibold">Total Pages:</span> {{ noteData.pages || 'N/A' }}</p>
       </div>
 
       @if(noteData.description){
