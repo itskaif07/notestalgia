@@ -6,6 +6,7 @@ import { Reviews } from '../../services/reviews/reviews';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 import { Cart } from '../../services/cart/cart';
+import { Razorpay } from '../../services/razorpay/razorpay';
 
 @Component({
   selector: 'app-shop',
@@ -18,6 +19,7 @@ export class Shop implements OnInit {
   reviewService = inject(Reviews)
   noteService = inject(Notes)
   cartService = inject(Cart)
+  razorpayService = inject(Razorpay)
 
   auth = inject(Auth)
   router = inject(Router)
@@ -66,12 +68,11 @@ export class Shop implements OnInit {
   getNoteDetails() {
     if (this.docId != null) {
       this.noteService.getNote(this.docId).subscribe({
-        next:(note) => {
+        next: (note) => {
           this.noteData = note
           this.PreviewImagesForDisplay = this.noteData.previewImages
-          console.log(note)
         },
-        error:(e) => console.log('error while finding note details')
+        error: (e) => console.log('error while finding note details')
       })
     }
   }
@@ -149,6 +150,23 @@ export class Shop implements OnInit {
   }
 
 
+  //preview Images
+
+
+  nextSlide() {
+    if (this.PreviewImagesForDisplay.length > 0) {
+      this.currentSlide = (this.currentSlide + 1) % this.PreviewImagesForDisplay.length;
+    }
+  }
+
+  prevSlide() {
+    if (this.PreviewImagesForDisplay.length > 0) {
+      this.currentSlide =
+        (this.currentSlide - 1 + this.PreviewImagesForDisplay.length) % this.PreviewImagesForDisplay.length;
+    }
+  }
+
+
   // Wishlist 
 
   addtoWishlist() {
@@ -163,20 +181,19 @@ export class Shop implements OnInit {
     }
   }
 
-  //preview
 
-  
-nextSlide() {
-  if (this.PreviewImagesForDisplay.length > 0) {
-    this.currentSlide = (this.currentSlide + 1) % this.PreviewImagesForDisplay.length;
-  }
-}
+  // Buy Note
 
-prevSlide() {
-  if (this.PreviewImagesForDisplay.length > 0) {
-    this.currentSlide =
-      (this.currentSlide - 1 + this.PreviewImagesForDisplay.length) % this.PreviewImagesForDisplay.length;
+  buyNote() {
+    this.razorpayService.placeOrder(1).subscribe({
+      next: () => {
+        console.log('✅ Order placed successfully');
+      },
+      error: (err) => {
+        console.error('❌ Failed to place order:', err);
+        // Optionally show error to user (e.g., toast/snackbar)
+      }
+    });
   }
-}
 
 }

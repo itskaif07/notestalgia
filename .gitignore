@@ -47,6 +47,7 @@ Thumbs.db
 .runtimeconfig.json
 
 /functions
+/notestalgia_functions
 
 
 src/app/firebaseConfig.ts// 
