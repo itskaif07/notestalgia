@@ -7,6 +7,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 import { Cart } from '../../services/cart/cart';
 import { Razorpay } from '../../services/razorpay/razorpay';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-shop',
@@ -24,6 +25,7 @@ export class Shop implements OnInit {
   auth = inject(Auth)
   router = inject(Router)
   activatedRoute = inject(ActivatedRoute)
+  http = inject(HttpClient)
 
   noteData: any = null
   docId: string | null = null
@@ -38,6 +40,7 @@ export class Shop implements OnInit {
   userReviewed: boolean = false
   isLoading = true
   isShowingPreview = false
+  isPaymentSuccessful = false
 
   currentSlide = 0;
 
@@ -185,15 +188,55 @@ export class Shop implements OnInit {
   // Buy Note
 
   buyNote() {
-    this.razorpayService.placeOrder(1).subscribe({
-      next: () => {
+    const amount = 1; // ₹50 ka amount agar fix hai to yahi use karein
+    this.razorpayService.placeOrder(amount).subscribe({
+      next: (order) => {
+        this.openRazorpay(order);
         console.log('✅ Order placed successfully');
       },
       error: (err) => {
         console.error('❌ Failed to place order:', err);
-        // Optionally show error to user (e.g., toast/snackbar)
+        // Optional: user ko error message dikha sakte hain
       }
     });
+  }
+
+  openRazorpay(order: any) {
+    const options = {
+      key: 'rzp_live_acjiRzTNtJCtdU',    // Yeh aapka Razorpay public key hai — ensure yeh sahi ho
+      amount: order.amount,
+      currency: order.currency,
+      order_id: order.id,
+      name: 'NotesTalgia',
+      description: `Purchase of note titled "${this.noteData?.title || 'Untitled'}" for ₹50 on Notestalgia`,
+      handler: (response: any) => {
+        this.http.post('https://api-2irx5macqa-uc.a.run.app/verifyPayment', {
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature
+        }).subscribe({
+          next: () => {
+            console.log('payment succesfull')
+            this.isPaymentSuccessful = true
+          },
+          error: (e) => {
+            console.log('Payment failed')
+            this.isPaymentSuccessful = false
+          }
+        })
+
+      },
+      prefill: {
+        name: this.currentUser?.displayName || '',
+        email: this.currentUser?.email || ''
+      },
+      theme: {
+        color: '#F3C44E'
+      }
+    };
+
+    const rzp = new (window as any).Razorpay(options);
+    rzp.open();
   }
 
 }
