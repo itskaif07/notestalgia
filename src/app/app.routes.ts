@@ -14,6 +14,7 @@ import { Disclaimer } from './components/legal/disclaimer/disclaimer';
 import { NotFound } from './components/error/not-found/not-found';
 import { Myaccount } from './components/auth/myaccount/myaccount';
 import { CartPage } from './components/cart/cart-page/cart-page';
+import { Kyc } from './components/kyc/kyc';
 
 
 export const routes: Routes = [
@@ -56,6 +57,11 @@ export const routes: Routes = [
     {
         path: 'upload',
         component: Upload
+    },
+
+    {
+        path: 'kyc',
+        component: Kyc
     },
 
     //Browse

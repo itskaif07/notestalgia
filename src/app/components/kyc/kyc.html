@@ -1,0 +1,111 @@
+<form [formGroup]="kycForm" (ngSubmit)="submitKyc()"
+  class="max-w-4xl mx-auto px-10 py-12 bg-white rounded-2xl shadow-lg space-y-10 border border-gray-200 mt-10"
+  id="kycFormContainer">
+
+  <!-- Heading -->
+  <div>
+    <h2 class="text-4xl font-bold text-gray-800 mb-3">🔐 KYC Verification Form</h2>
+    <p class="text-gray-600 text-base">
+      For secure payouts and legal compliance. Fields marked <span class="text-red-500">*</span> are mandatory.
+    </p>
+  </div>
+
+  <!-- Grid Layout -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
+
+    <!-- Full Name -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Full Name <span class="text-red-500">*</span></label>
+      <input formControlName="fullName" type="text" placeholder="As per PAN and bank records"
+        class="w-full border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+      <p class="text-sm text-gray-500 mt-2">Enter your full legal name.</p>
+    </div>
+
+    <!-- Mobile Number -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Mobile Number</label>
+      <input formControlName="mobile" type="text" placeholder="10-digit mobile number"
+        class="w-full border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+      <p class="text-sm text-gray-500 mt-2">Recommended for communication.</p>
+    </div>
+
+    <!-- Email -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Email ID</label>
+      <input formControlName="email" type="email" placeholder="example@mail.com"
+        class="w-full border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+      <p class="text-sm text-gray-500 mt-2">Recommended for updates.</p>
+    </div>
+
+    <!-- Address -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Address <span class="text-red-500">*</span></label>
+      <textarea formControlName="address" rows="3" placeholder="Your full address"
+        class="w-full border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition resize-none"></textarea>
+      <p class="text-sm text-gray-500 mt-2">Full postal address for compliance.</p>
+    </div>
+
+    <!-- Bank Account -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Bank Account Number <span
+          class="text-red-500">*</span></label>
+      <input formControlName="bankAccount" type="text" placeholder="Your bank account number"
+        class="w-full border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+    </div>
+
+    <!-- IFSC Code -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">IFSC Code <span class="text-red-500">*</span></label>
+      <input formControlName="ifsc" type="text" maxlength="11" placeholder="Example: HDFC0001234"
+        class="uppercase w-full border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+      <p class="text-sm text-gray-500 mt-2">Ensure correct IFSC code for your branch.</p>
+    </div>
+
+    <!-- Beneficiary Name -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Beneficiary Name <span
+          class="text-red-500">*</span></label>
+      <input formControlName="beneficiaryName" type="text" placeholder="Name as per bank account"
+        class="w-full border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+      <p class="text-sm text-gray-500 mt-2">Must match bank records exactly.</p>
+    </div>
+
+    <!-- PAN Number -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">PAN Number <span class="text-red-500">*</span></label>
+      <input formControlName="panNumber" type="text" maxlength="10" placeholder="ABCDE1234F"
+        class="uppercase w-full border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+      <p class="text-sm text-gray-500 mt-2">Permanent Account Number.</p>
+    </div>
+
+    <!-- Aadhaar Number -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Aadhaar Number (Optional)</label>
+      <input formControlName="aadhaarNumber" type="text" maxlength="14" placeholder="XXXX XXXX XXXX"
+        class="w-full border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" />
+      <p class="text-sm text-gray-500 mt-2">Used for additional verification.</p>
+    </div>
+
+    <!-- PAN Card Upload -->
+    <div class="col-span-1 md:col-span-2">
+      <label class="block text-sm font-medium text-gray-700 mb-2">PAN Card Upload <span
+          class="text-red-500">*</span></label>
+      <input type="file" (change)="onFileChange($event)" accept=".jpg,.jpeg,.png,.pdf"
+        class="w-full border border-gray-300 bg-white text-gray-900 file:bg-blue-50 file:border-none file:rounded-md file:px-4 file:py-2 file:text-blue-700 hover:file:bg-blue-100 transition" />
+      <p class="text-sm text-gray-500 mt-2">Upload a clear scan or photo of your PAN card.</p>
+    </div>
+
+  </div>
+
+  <!-- Submit -->
+  <div class="flex items-center justify-start space-x-5">
+    <button type="submit" [disabled]="kycForm.invalid"
+      class="w-full md:w-auto cursor-pointer px-10 py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition disabled:opacity-50">
+      ✅ Submit KYC
+    </button>
+    <button type="button" (click)="cancelled.emit()"
+      class="w-full md:w-auto cursor-pointer px-10 py-4 bg-gray-300 text-white font-semibold rounded-xl hover:bg-gray-400 transition disabled:opacity-50">
+      Cancel
+    </button>
+  </div>
+</form>

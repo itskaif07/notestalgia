@@ -59,7 +59,7 @@
   </div>
 
   <!-- Middle: Details -->
-  <div class="w-full sm:w-4/5 lg:w-1/2 shadow-lg rounded-2xl bg-[#1E1E1E] px-6 py-6 text-white space-y-6">
+  <div class="w-full sm:w-11/12 lg:w-1/2 shadow-lg rounded-2xl bg-[#1E1E1E] py-6 text-white space-y-6">
 
     <!-- Title + Ratings -->
     <div class="space-y-3">
@@ -67,7 +67,7 @@
 
       @if(reviewCount && averageRatings != null){
       <div class="flex items-center gap-3 text-sm text-gray-300">
-        <p>⭐ {{ averageRatings }}</p>
+        <p>⭐ {{ averageRatings.toFixed(1) }}</p>
         <span class="text-gray-500">•</span>
         <p>{{ reviewCount }} {{ reviewCount === 1 ? 'Review' : 'Reviews' }}</p>
       </div>
@@ -102,7 +102,7 @@
   </div>
 
   <!-- Right: Actions -->
-  <div class="w-full sm:w-4/5 lg:w-1/4 flex flex-col items-center justify-start space-y-6">
+  <div class="w-full sm:w-11/12 lg:w-1/4 flex flex-col items-center justify-start space-y-6">
 
     <!-- Order Section -->
     <div class="w-full bg-[#252525] border border-white/20 px-4 py-5 rounded-xl space-y-5 shadow-lg">
@@ -118,7 +118,7 @@
         @else {
         <div
           class="w-full py-3 text-center bg-green-600 rounded font-medium hover:bg-green-700 hover:scale-105 transition-all cursor-pointer">
-          📄 Download
+          <a [href]="noteData.fileUrl" target="_blank" [download]="noteData.title">Download</a>
         </div>
         }
 
@@ -169,10 +169,10 @@
         </div>
 
         @if(currentUser?.uid === review.userId){
-        <div class="absolute top-6 right-2 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200">
+        <div class="absolute top-6 right-2 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200">
           <button (click)="deleteReview(review.id)"
-            class="bg-red-500 text-white text-xs px-4 py-2 rounded hover:bg-red-700 font-semibold cursor-pointer">
-            Delete
+            class="bg-red-600 text-white text-xs w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-700 font-semibold cursor-pointer">
+            <img src="assets/trash.png" alt="" class="w-4 invert grayscale">
           </button>
         </div>
         }

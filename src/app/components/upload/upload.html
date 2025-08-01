@@ -1,4 +1,15 @@
 <div class="h-full w-full flex flex-col items-start justify-center space-y-10 overflow-x-hidden">
+
+   @if(isMenuOpen){
+     @if(isMenuOpen){
+    <div class="fixed inset-0 z-40 backdrop-blur-lg overflow-y-auto">
+      <div class="w-full max-w-4xl mx-auto bg-white dark:bg-neutral-900 rounded-2xl shadow-xl p-8 mt-12 mb-12">
+        <app-kyc (cancelled)="isMenuOpen = false"></app-kyc>
+      </div>
+    </div>
+  }
+  }
+
     <div
         class="w-full flex flex-col items-center justify-center text-center lg:justify-start text-white py-6 px-10 space-y-3">
         <h1 class="text-3xl font-bold">Upload Your Handwritten Notes</h1>
@@ -35,7 +46,7 @@
                 </div>
             </div>
 
-            <!-- Step 3 -->
+             <!-- Step 3 -->
             <div class="flex items-start space-x-4">
                 <div [ngClass]="{
             'bg-yellow-400': currentStep === 3,
@@ -43,7 +54,20 @@
           }" class="h-5 w-5 rounded-full mt-1 transition-all duration-300">
                 </div>
                 <div>
-                    <h2 class="font-bold text-lg" [class.text-yellow-400]="currentStep === 3">Submit</h2>
+                    <h2 class="font-bold text-lg" [class.text-yellow-400]="currentStep === 3">Complete KYC</h2>
+                    <p class="text-sm text-gray-400">Add bank details and complete your kyc</p>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="flex items-start space-x-4">
+                <div [ngClass]="{
+            'bg-yellow-400': currentStep === 4,
+            'border-2 border-white': currentStep !== 4
+          }" class="h-5 w-5 rounded-full mt-1 transition-all duration-300">
+                </div>
+                <div>
+                    <h2 class="font-bold text-lg" [class.text-yellow-400]="currentStep === 4">Submit</h2>
                     <p class="text-sm text-gray-400">Review & submit your note</p>
                 </div>
             </div>
@@ -121,7 +145,8 @@
                 <div class="w-full flex flex-col-reverse xl:flex-row items-center justify-center lg:space-x-6 ">
                     <div class="w-full h-full xl:w-1/2 space-y-4">
                         <div class="flex flex-col space-y-1">
-                            <label for="title" class="text-sm text-white">Title</label>
+                            <label for="title" class="text-sm text-white">Title <span
+                                    class="text-white ml-2">*</span></label>
                             <input id="title" type="text" formControlName="title"
                                 class="bg-transparent border placeholder:text-sm  rounded-lg px-4 py-2 focus:outline-none  text-white placeholder-white placeholder-opacity-60">
 
@@ -137,7 +162,8 @@
 
 
                         <div class="flex flex-col space-y-1">
-                            <label for="category" class="text-sm text-white">Category</label>
+                            <label for="category" class="text-sm text-white">Category <span
+                                    class="text-white ml-2">*</span></label>
                             <select id="category" formControlName="category"
                                 class="bg-transparent border placeholder:text-sm  rounded-lg px-4 py-2 focus:outline-none  text-white placeholder-white placeholder-opacity-60">
                                 <option value="#" class="text-sm text-black" disabled>Select a Category</option>
@@ -154,7 +180,8 @@
                         </div>
 
                         <div class="flex flex-col space-y-1">
-                            <label for="level" class="text-sm text-white">Academic Level</label>
+                            <label for="level" class="text-sm text-white">Academic Level <span
+                                    class=" ml-2 text-white">*</span></label>
                             <select id="level" formControlName="level"
                                 class="bg-transparent border placeholder:text-sm  rounded-lg px-4 py-2 focus:outline-none  text-white placeholder-white placeholder-opacity-60">
                                 <option value="#" class="text-sm text-black" disabled>Select a Level</option>
@@ -171,7 +198,8 @@
                         </div>
 
                         <div class="flex flex-col space-y-1">
-                            <label for="subject" class="text-sm text-white">Subject</label>
+                            <label for="subject" class="text-sm text-white">Subject <span
+                                    class="text-white ml-2">*</span></label>
 
                             <select id="subject" formControlName="subject"
                                 class="bg-transparent border placeholder:text-sm  rounded-lg px-4 py-2 focus:outline-none  text-white placeholder-white placeholder-opacity-60">
@@ -289,9 +317,40 @@
                 </div>
             </div>
 
-            <!-- Phase 3 -->
+            <!-- phase 3 -->
 
-            <div id="phase3" class="w-full h-full hidden items-center justify-center flex-col px-6 py-4 space-y-6">
+            <div id="phase3" class="w-full hidden items-center justify-center flex-col px-6 py-4 space-y-6 relative pb-28 ">
+                <div class=" p-8 rounded-lg flex flex-col items-center max-w-xl w-full space-y-3">
+                    <!-- Hero Icon (Example: User Shield Outline from Heroicons) -->
+                    <img src="assets/kyc.png" alt="">
+                    <!-- Explanatory sentence -->
+                    <p class="text-white text-center mb-8 ">
+                        Before submitting your note, we require you to complete your KYC so that you can receive
+                        payments for it.
+                    </p>
+                    <!-- Start KYC Button -->
+                    <button type="button" (click)="isMenuOpen = !isMenuOpen"
+                        class="bg-green-500 text-sm cursor-pointer hover:bg-green-600 focus:outline-none py-3 px-8 rounded transition-all duration-300 ease-in-out hover:scale-105">
+                        Start KYC
+                    </button>
+                </div>
+
+                <div
+                    class="absolute bottom-0 w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between space-y-6 sm:space-y-0 px-3">
+                    <button id="back3" type="button" (click)="phase3BackAnimation()"
+                        class="bg-blue-300 cursor-pointer text-black rounded w-full sm:w-36 h-12 font-semibold hover:bg-blue-400 transition-all duration-300 ease-in-out hover:scale-105">
+                        Back
+                    </button>
+
+                    <button id="button2" type="button"
+                        [disabled]="uploadForm.get('title')?.invalid || uploadForm.get('category')?.invalid || uploadForm.get('subject')?.invalid"
+                        class="bg-amber-300 rounded w-full sm:w-36 h-12 hover:bg-amber-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer disabled:bg-amber-100 disabled:cursor-not-allowed">Next</button>
+                </div>
+            </div>
+
+            <!-- Phase 4 -->
+
+            <div id="phase4" class="w-full h-full hidden items-center justify-center flex-col px-6 py-4 space-y-6">
 
                 <div
                     class="w-full flex flex-col-reverse xl:flex-row items-center justify-center xl:space-x-6 bg-[#1e1e1e] rounded-2xl shadow-lg overflow-hidden">
@@ -349,9 +408,6 @@
                             </div>
                         </div>
                         }
-
-
-
 
                     </div>
 

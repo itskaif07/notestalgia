@@ -8,6 +8,7 @@ import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 import { Cart } from '../../services/cart/cart';
 import { Razorpay } from '../../services/razorpay/razorpay';
 import { HttpClient } from '@angular/common/http';
+import { Orders } from '../../services/orders/orders';
 
 @Component({
   selector: 'app-shop',
@@ -21,6 +22,7 @@ export class Shop implements OnInit {
   noteService = inject(Notes)
   cartService = inject(Cart)
   razorpayService = inject(Razorpay)
+  orderService = inject(Orders)
 
   auth = inject(Auth)
   router = inject(Router)
@@ -35,12 +37,14 @@ export class Shop implements OnInit {
   reviewCount: number | null = null
   averageRatings: number | null = null
   reviewId: string | null = null
+  razorpayId: string | null = null
 
   isShowingReviewBox: boolean = false
   userReviewed: boolean = false
   isLoading = true
   isShowingPreview = false
   isPaymentSuccessful = false
+
 
   currentSlide = 0;
 
@@ -74,6 +78,8 @@ export class Shop implements OnInit {
         next: (note) => {
           this.noteData = note
           this.PreviewImagesForDisplay = this.noteData.previewImages
+          console.log(this.noteData)
+          this.verifyPurchase()
         },
         error: (e) => console.log('error while finding note details')
       })
@@ -184,17 +190,38 @@ export class Shop implements OnInit {
     }
   }
 
+  verifyPurchase() {
+    console.log('verifyPurchase called');  // add this first
+
+    if (this.currentUser && this.noteData) {
+      this.orderService.checkIfNotePurchased(this.currentUser.uid, this.noteData.id).subscribe({
+        next: (res) => {
+          console.log('Purchase status from backend:', res);
+          this.isPaymentSuccessful = res;
+        },
+        error: (err) => {
+          console.error('Error checking purchase status:', err);
+          this.isPaymentSuccessful = false;
+        }
+      });
+    } else {
+      console.log('verifyPurchase skipped: currentUser or noteData missing', this.currentUser, this.noteData);
+    }
+  }
 
   // Buy Note
 
   buyNote() {
+    this.isLoading = true
     const amount = 1; // ₹50 ka amount agar fix hai to yahi use karein
     this.razorpayService.placeOrder(amount).subscribe({
       next: (order) => {
+        this.isLoading = false
         this.openRazorpay(order);
         console.log('✅ Order placed successfully');
       },
       error: (err) => {
+        this.isLoading = false
         console.error('❌ Failed to place order:', err);
         // Optional: user ko error message dikha sakte hain
       }
@@ -203,28 +230,14 @@ export class Shop implements OnInit {
 
   openRazorpay(order: any) {
     const options = {
-      key: 'rzp_live_acjiRzTNtJCtdU',    // Yeh aapka Razorpay public key hai — ensure yeh sahi ho
+      key: 'rzp_live_acjiRzTNtJCtdU',
       amount: order.amount,
       currency: order.currency,
       order_id: order.id,
       name: 'NotesTalgia',
       description: `Purchase of note titled "${this.noteData?.title || 'Untitled'}" for ₹50 on Notestalgia`,
       handler: (response: any) => {
-        this.http.post('https://api-2irx5macqa-uc.a.run.app/verifyPayment', {
-          razorpay_order_id: response.razorpay_order_id,
-          razorpay_payment_id: response.razorpay_payment_id,
-          razorpay_signature: response.razorpay_signature
-        }).subscribe({
-          next: () => {
-            console.log('payment succesfull')
-            this.isPaymentSuccessful = true
-          },
-          error: (e) => {
-            console.log('Payment failed')
-            this.isPaymentSuccessful = false
-          }
-        })
-
+        this.handlePaymentSuccess(response, order);
       },
       prefill: {
         name: this.currentUser?.displayName || '',
@@ -236,7 +249,64 @@ export class Shop implements OnInit {
     };
 
     const rzp = new (window as any).Razorpay(options);
+
+    rzp.on('payment.failed', (response: any) => {
+      console.error('Payment failed:', response.error);
+      this.isPaymentSuccessful = false;
+      // Optional: user ko error message dikhayein
+    });
+
     rzp.open();
   }
 
+
+  private handlePaymentSuccess(response: any, order: any) {
+    // Payment verification backend call
+    this.http.post('https://api-2irx5macqa-uc.a.run.app/verifyPayment', {
+      razorpay_order_id: response.razorpay_order_id,
+      razorpay_payment_id: response.razorpay_payment_id,
+      razorpay_signature: response.razorpay_signature
+    }).subscribe({
+      next: () => {
+        console.log('Payment successful');
+        this.isPaymentSuccessful = true;
+
+        // Order details backend me save karna
+        if (this.currentUser && this.noteData) {
+          this.saveOrder(response, order);
+        }
+      },
+      error: (e) => {
+        console.error('Payment verification failed', e);
+        this.isPaymentSuccessful = false;
+        // Optional: user ko error message dikhayein
+      }
+    });
+  }
+
+  private saveOrder(response: any, order: any) {
+    const orderData = {
+      orderId: response.razorpay_order_id,
+      userId: this.currentUser?.uid || '',
+      noteId: this.noteData.id,
+      amount: order.amount,
+      currency: order.currency,
+      paymentId: response.razorpay_payment_id,
+      isPaymentCompleted: true,
+      status: 'paid',
+      createdAt: new Date().toISOString(),
+    };
+
+    this.orderService.saveOrderDetails(this.currentUser?.uid!, response.razorpay_order_id, orderData)
+      .subscribe({
+        next: () => {
+          console.log('Order details saved successfully');
+          // Optional: user ko success feedback de sakte hain
+        },
+        error: (e) => {
+          console.error('Error occurred while saving order details', e);
+          // Optional: user ko error feedback de sakte hain
+        }
+      });
+  }
 }

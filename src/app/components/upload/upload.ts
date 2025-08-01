@@ -11,10 +11,11 @@ import { noteSubjects } from '../../models/subject';
 import { NoteCategories } from '../../models/category';
 import { noteLevels } from '../../models/level';
 import { CommonModule } from '@angular/common';
+import { Kyc } from "../kyc/kyc";
 
 @Component({
   selector: 'app-upload',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, Kyc],
   templateUrl: './upload.html',
   styleUrl: './upload.css'
 })
@@ -45,6 +46,7 @@ export class Upload implements OnInit {
   isDragging = false;
   isDropped = false;
   isLoading = false
+  isMenuOpen = false
 
 
   currentStep: number = 1;
