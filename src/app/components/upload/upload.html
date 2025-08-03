@@ -4,11 +4,11 @@
      @if(isMenuOpen){
     <div class="fixed inset-0 z-40 backdrop-blur-lg overflow-y-auto">
       <div class="w-full max-w-4xl mx-auto bg-white dark:bg-neutral-900 rounded-2xl shadow-xl p-8 mt-12 mb-12">
-        <app-kyc (cancelled)="isMenuOpen = false"></app-kyc>
+        <app-kyc (cancelled)="isMenuOpen = false" (kycCompleted)="kycCompleted($event)" ></app-kyc>
       </div>
     </div>
   }
-  }
+}
 
     <div
         class="w-full flex flex-col items-center justify-center text-center lg:justify-start text-white py-6 px-10 space-y-3">
@@ -257,7 +257,7 @@
                             <h1>Upload a thumbnail of your file</h1>
                             <h1>(optional)</h1>
                         </label>
-                        <input type="file" id="fileInput" class="hidden" accept="image/*"
+                        <input type="file" id="fileInput" class="hidden" accept=".jpg, .jpeg, .webp"
                             (change)="selectThumbnail($event)">
                         }
                         }
@@ -319,8 +319,8 @@
 
             <!-- phase 3 -->
 
-            <div id="phase3" class="w-full hidden items-center justify-center flex-col px-6 py-4 space-y-6 relative pb-28 ">
-                <div class=" p-8 rounded-lg flex flex-col items-center max-w-xl w-full space-y-3">
+            <div id="phase3" class="w-full h-[60vh] hidden items-center justify-center flex-col px-6 py-4 space-y-6 relative ">
+                <div class=" p-8 rounded-lg flex flex-col items-center max-w-xl w-full h-full space-y-3">
                     <!-- Hero Icon (Example: User Shield Outline from Heroicons) -->
                     <img src="assets/kyc.png" alt="">
                     <!-- Explanatory sentence -->
@@ -336,24 +336,23 @@
                 </div>
 
                 <div
-                    class="absolute bottom-0 w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between space-y-6 sm:space-y-0 px-3">
+                    class=" w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between space-y-6 sm:space-y-0 px-3">
                     <button id="back3" type="button" (click)="phase3BackAnimation()"
                         class="bg-blue-300 cursor-pointer text-black rounded w-full sm:w-36 h-12 font-semibold hover:bg-blue-400 transition-all duration-300 ease-in-out hover:scale-105">
                         Back
                     </button>
 
-                    <button id="button2" type="button"
-                        [disabled]="uploadForm.get('title')?.invalid || uploadForm.get('category')?.invalid || uploadForm.get('subject')?.invalid"
+                    <button (click)="phase3Animation()" id="button3" type="button" [disabled]="!isKycCompleted" [ngClass]="isKycCompleted? 'opacity-100': 'opacity-50'"
                         class="bg-amber-300 rounded w-full sm:w-36 h-12 hover:bg-amber-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer disabled:bg-amber-100 disabled:cursor-not-allowed">Next</button>
                 </div>
             </div>
 
             <!-- Phase 4 -->
 
-            <div id="phase4" class="w-full h-full hidden items-center justify-center flex-col px-6 py-4 space-y-6">
+            <div id="phase4" class="w-full h-[80vh] hidden items-center justify-center flex-col px-6 py-4 space-y-6 relative pb-28">
 
                 <div
-                    class="w-full flex flex-col-reverse xl:flex-row items-center justify-center xl:space-x-6 bg-[#1e1e1e] rounded-2xl shadow-lg overflow-hidden">
+                    class="w-full h-full flex flex-col-reverse xl:flex-row items-center justify-center xl:space-x-6 bg-[#1e1e1e] rounded-2xl shadow-lg overflow-hidden">
 
                     <!-- Text Section -->
                     <div
@@ -365,7 +364,7 @@
 
                         <!-- Meta Info (Simplified) -->
                         <div
-                            class="space-y-1 text-white flex flex-col items-center xl:items-start justify-center w-full">
+                            class="space-y-3 text-white flex flex-col items-center xl:items-start justify-center w-full">
                             <div
                                 class="flex items-center justify-center xl:justify-start gap-2 w-full text-sm lg:text-base">
                                 <span class="text-gray-400 font-medium">📘 Subject:</span>
@@ -428,7 +427,7 @@
 
                 <div
                     class="w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between space-y-6 sm:space-y-0">
-                    <button id="back3" type="button" (click)="phase3BackAnimation()"
+                    <button id="back3" type="button" (click)="phase4BackAnimation()"
                         class="bg-blue-300 cursor-pointer text-black rounded w-full sm:w-36 h-12 font-semibold hover:bg-blue-400 transition-all duration-300 ease-in-out hover:scale-105">
                         Back
                     </button>
@@ -440,5 +439,5 @@
             </div>
 
         </form>
-    </div>
+
 </div>

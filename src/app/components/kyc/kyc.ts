@@ -16,21 +16,24 @@ export class Kyc {
   authService = inject(AuthService)
 
   @Output() cancelled = new EventEmitter<void>()
+  @Output() kycCompleted = new EventEmitter<boolean>()
 
   fb = inject(FormBuilder)
   kycForm: FormGroup = this.fb.group({})
 
   uid: string | null = null
+  isLoading = false
 
   ngOnInit(): void {
     this.setFormState()
     this.getUser()
 
+
     this.kycForm.get('panNumber')?.valueChanges.subscribe(value => {
-  if (value && value !== value.toUpperCase()) {
-    this.kycForm.get('panNumber')?.setValue(value.toUpperCase(), { emitEvent: false });
-  }
-});
+      if (value && value !== value.toUpperCase()) {
+        this.kycForm.get('panNumber')?.setValue(value.toUpperCase(), { emitEvent: false });
+      }
+    });
 
   }
 
@@ -83,28 +86,70 @@ export class Kyc {
 
 
   submitKyc() {
+    this.isLoading = true
     const panValue = this.kycForm.get('panNumber')?.value;
     if (panValue) {
       this.kycForm.patchValue({ panNumber: panValue.toUpperCase() });
     }
 
     if (this.uid) {
-      const formData = this.kycForm.getRawValue()
-      console.log(formData)
+      const formData = this.kycForm.getRawValue();
+
+      const contactData = {
+        name: formData.fullName,
+        email: formData.email,
+        contact: formData.mobile,
+        type: "employee",
+        reference_id: this.uid
+      };
+
       this.kycService.addKyc(this.uid, formData).subscribe({
-        next: (res) => {
-          alert('kyc added succesfully')
+        next: () => {
+          this.kycService.createContact(contactData).subscribe({
+            next: (res) => {
+              console.log('contact added successfully', res);
+
+              const contactId = res.id; 
+
+              const fundAccountData = {
+                contact_id: contactId,
+                account_type: 'bank_account',
+                bank_account: {
+                  name: formData.beneficiaryName,
+                  ifsc: formData.ifsc,
+                  account_number: formData.bankAccount
+                }
+              };
+
+              this.kycService.createFundAccount(fundAccountData).subscribe({
+                next: (res) => {
+                  console.log('fund Account created successfully', res);
+                  this.isLoading = false   
+                  this.cancelled.emit();
+                  this.kycCompleted.emit(true);
+                },
+                error: (e) => {
+                  console.log('fund Account error', e);
+                  alert('Error creating fund account, Please re-check your details')
+                  this.kycCompleted.emit(false);
+                  this.isLoading = false
+                }
+              });
+
+            },
+            error: (e) => {
+              console.error('An error occurred while saving contact', e);
+            }
+          });
         },
         error: (e) => {
-          alert('kyc failed!!')
-          console.log('error while submitting kyc', e)
+          alert('KYC failed!! Try again');
+          console.log('error while submitting kyc', e);
         }
-      })
+      });
     } else {
       this.kycForm.markAllAsTouched();
     }
   }
-
-
 
 }

@@ -47,6 +47,7 @@ export class Upload implements OnInit {
   isDropped = false;
   isLoading = false
   isMenuOpen = false
+  isKycCompleted = false
 
 
   currentStep: number = 1;
@@ -252,7 +253,6 @@ removePreview(index: number) {
 
   formSubmit() {
 
-    
     if(!this.title || !this.category || !this.level || !this.subject){
       console.log('required fields are empty')
       return
@@ -270,6 +270,12 @@ removePreview(index: number) {
       error: (error) => console.log(error)
     })
   }
+
+
+  kycCompleted(success:boolean){
+    this.isKycCompleted = true
+  }
+
 
 
   //Animation
@@ -368,6 +374,42 @@ removePreview(index: number) {
     })
   }
 
+  
+  phase3Animation() {
+
+    this.goToStep(4)
+
+    gsap.to('#phase3', {
+      x: 200,
+      opacity: 0,
+      duration: 0.5,
+      ease: 'expo.inOut',
+      onComplete: () => {
+        document.getElementById('phase3')!.classList.remove('flex')
+        document.getElementById('phase3')!.classList.add('hidden')
+      }
+    })
+
+    gsap.set('#phase4', {
+      x: -200,
+      opacity: 0
+    })
+
+    gsap.to('#phase4', {
+      x: 0,
+      opacity: 1,
+      duration: 0.5,
+      ease: 'expo.inOut',
+      delay: 0.5,
+      onStart: () => {
+        document.getElementById('phase4')!.classList.remove('hidden')
+        document.getElementById('phase4')!.classList.add('flex')
+      }
+    })
+  }
+
+
+
   phase3BackAnimation() {
     this.goToStep(2)
     gsap.to('#phase3', {
@@ -390,6 +432,33 @@ removePreview(index: number) {
       onStart: () => {
         document.getElementById('phase2')!.classList.remove('hidden')
         document.getElementById('phase2')!.classList.add('flex')
+      }
+    })
+  }
+
+
+   phase4BackAnimation() {
+    this.goToStep(2)
+    gsap.to('#phase4', {
+      x: 200,
+      opacity: 0,
+      duration: 0.5,
+      ease: 'expo.inOut',
+      onComplete: () => {
+        document.getElementById('phase4')!.classList.remove('flex')
+        document.getElementById('phase4')!.classList.add('hidden')
+      }
+    })
+
+    gsap.to('#phase3', {
+      x: 0,
+      opacity: 1,
+      duration: 0.5,
+      ease: 'expo.inOut',
+      delay: 0.5,
+      onStart: () => {
+        document.getElementById('phase3')!.classList.remove('hidden')
+        document.getElementById('phase3')!.classList.add('flex')
       }
     })
   }
