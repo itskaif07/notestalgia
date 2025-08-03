@@ -1,14 +1,14 @@
 <div class="h-full w-full flex flex-col items-start justify-center space-y-10 overflow-x-hidden">
 
-   @if(isMenuOpen){
-     @if(isMenuOpen){
+    @if(isMenuOpen){
+    @if(isMenuOpen){
     <div class="fixed inset-0 z-40 backdrop-blur-lg overflow-y-auto">
-      <div class="w-full max-w-4xl mx-auto bg-white dark:bg-neutral-900 rounded-2xl shadow-xl p-8 mt-12 mb-12">
-        <app-kyc (cancelled)="isMenuOpen = false" (kycCompleted)="kycCompleted($event)" ></app-kyc>
-      </div>
+        <div class="w-full max-w-4xl mx-auto bg-white dark:bg-neutral-900 rounded-2xl shadow-xl p-8 mt-12 mb-12">
+            <app-kyc (cancelled)="isMenuOpen = false" (kycCompleted)="kycCompleted($event)"></app-kyc>
+        </div>
     </div>
-  }
-}
+    }
+    }
 
     <div
         class="w-full flex flex-col items-center justify-center text-center lg:justify-start text-white py-6 px-10 space-y-3">
@@ -46,7 +46,7 @@
                 </div>
             </div>
 
-             <!-- Step 3 -->
+            <!-- Step 3 -->
             <div class="flex items-start space-x-4">
                 <div [ngClass]="{
             'bg-yellow-400': currentStep === 3,
@@ -319,7 +319,10 @@
 
             <!-- phase 3 -->
 
-            <div id="phase3" class="w-full h-[60vh] hidden items-center justify-center flex-col px-6 py-4 space-y-6 relative ">
+            <div id="phase3"
+                class="w-full h-[60vh] hidden items-center justify-center flex-col px-6 py-4 space-y-6 relative ">
+                @if(!isKycCompleted){
+
                 <div class=" p-8 rounded-lg flex flex-col items-center max-w-xl w-full h-full space-y-3">
                     <!-- Hero Icon (Example: User Shield Outline from Heroicons) -->
                     <img src="assets/kyc.png" alt="">
@@ -334,6 +337,18 @@
                         Start KYC
                     </button>
                 </div>
+                }@else {
+                <div class="p-8 rounded-lg flex items-center justify-center max-w-xl w-full h-full space-x-5 bg-green-600">
+                    <!-- Success Icon (You can use a checkmark or badge icon) -->
+                    <img src="assets/done.png" alt="" class="w-10">
+                    <!-- Explanatory sentence -->
+                    <p class="text-white">
+                        Congratulations! Your KYC is <span class="font-semibold">successfully completed.</span><br>
+                        Now you can receive payments for your notes.
+                    </p>
+                </div>
+
+                }
 
                 <div
                     class=" w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between space-y-6 sm:space-y-0 px-3">
@@ -342,14 +357,16 @@
                         Back
                     </button>
 
-                    <button (click)="phase3Animation()" id="button3" type="button" [disabled]="!isKycCompleted" [ngClass]="isKycCompleted? 'opacity-100': 'opacity-50'"
+                    <button (click)="phase3Animation()" id="button3" type="button" [disabled]="!isKycCompleted"
+                        [ngClass]="isKycCompleted? 'opacity-100': 'opacity-50'"
                         class="bg-amber-300 rounded w-full sm:w-36 h-12 hover:bg-amber-400 transition-all duration-300 ease-in hover:scale-105 cursor-pointer disabled:bg-amber-100 disabled:cursor-not-allowed">Next</button>
                 </div>
             </div>
 
             <!-- Phase 4 -->
 
-            <div id="phase4" class="w-full h-[80vh] hidden items-center justify-center flex-col px-6 py-4 space-y-6 relative pb-28">
+            <div id="phase4"
+                class="w-full h-[80vh] hidden items-center justify-center flex-col px-6 py-4 space-y-6 relative pb-28">
 
                 <div
                     class="w-full h-full flex flex-col-reverse xl:flex-row items-center justify-center xl:space-x-6 bg-[#1e1e1e] rounded-2xl shadow-lg overflow-hidden">
@@ -440,4 +457,4 @@
 
         </form>
 
-</div>
+    </div>

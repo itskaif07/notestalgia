@@ -3,10 +3,11 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Kyc as KycService } from '../../services/kyc/kyc';
 import { AuthService } from '../../services/auth/auth-service';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-kyc',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './kyc.html',
   styleUrl: './kyc.css'
 })
@@ -23,6 +24,7 @@ export class Kyc {
 
   uid: string | null = null
   isLoading = false
+  isUploadingPan = false
 
   ngOnInit(): void {
     this.setFormState()
@@ -67,6 +69,7 @@ export class Kyc {
 
 
   async onFileChange(event: Event) {
+    this.isUploadingPan = true
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       const file = input.files[0];
@@ -78,8 +81,10 @@ export class Kyc {
         const downloadPan = await getDownloadURL(fileRef);
         this.kycForm.patchValue({ panCard: downloadPan });
         console.log('pan added succesfully')
+        this.isUploadingPan = false
       } catch (e) {
         console.error('Upload failed:', e);
+        this.isUploadingPan = false
       }
     }
   }
@@ -109,7 +114,7 @@ export class Kyc {
             next: (res) => {
               console.log('contact added successfully', res);
 
-              const contactId = res.id; 
+              const contactId = res.id;
 
               const fundAccountData = {
                 contact_id: contactId,
@@ -124,9 +129,21 @@ export class Kyc {
               this.kycService.createFundAccount(fundAccountData).subscribe({
                 next: (res) => {
                   console.log('fund Account created successfully', res);
-                  this.isLoading = false   
-                  this.cancelled.emit();
-                  this.kycCompleted.emit(true);
+
+                  const updateStatus = { ...formData, kycCompleted: true }
+
+                  this.kycService.updateKycStatus(this.uid!, updateStatus).subscribe({
+                    next: (res) => {
+                      this.isLoading = false
+                      this.cancelled.emit();
+                      this.kycCompleted.emit(true);
+                      console.log('kyc update added succesfully')
+                    },
+                    error: (e) => {
+                      console.log('kyc update failed miserably, you will have to try again for this mate')
+                    }
+                  })
+
                 },
                 error: (e) => {
                   console.log('fund Account error', e);

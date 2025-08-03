@@ -10,4 +10,5 @@ export interface kycModel {
     panNumber: string;
     panCard: File | null;    // File or Blob depending on file input
     aadhaarNumber?: string;
+    isKycCompleted: boolean
 }

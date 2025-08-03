@@ -13,10 +13,14 @@ export class Kyc {
   constructor(private fireStore: Firestore, private http: HttpClient) { }
 
   addKyc(userId: string, data: kycModel): Observable<any> {
-    const collectionRef = collection(this.fireStore, `users/${userId}/kyc`)
-    return from(addDoc(collectionRef, data))
+    const collectionRef = doc(this.fireStore, `users/${userId}/kyc`, 'kycData')
+    return from(setDoc(collectionRef, data))
   }
 
+  updateKycStatus(userId: string, status: boolean): Observable<any> {
+    const docRef = doc(this.fireStore, `users/${userId}/kyc`, 'kycData');
+    return from(setDoc(docRef, { kycCompleted: status }, { merge: true }));
+  }
 
 createContact(data: any): Observable<any> {
     return this.http.post('https://api-2irx5macqa-uc.a.run.app/create-contact', data);
